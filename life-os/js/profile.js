@@ -472,6 +472,22 @@
   LOS.pushCloud = pushCloud;
   LOS.pullCloud = pullCloud;
 
+  /* auto-sync: debounced push on save when configured */
+  let cloudPushTimer = null;
+  function scheduleCloudPush() {
+    const c = cloudPrefs();
+    if (c.provider === 'none' || !c.token) return;
+    if (cloudPushTimer) clearTimeout(cloudPushTimer);
+    cloudPushTimer = setTimeout(() => { cloudPushTimer = null; pushCloud(); }, 2500);
+  }
+  LOS.scheduleCloudPush = scheduleCloudPush;
+
+  const _origSave = LOS.save;
+  LOS.save = function () {
+    _origSave();
+    try { scheduleCloudPush(); } catch (e) {}
+  };
+
   const cloudProvider = document.getElementById('cloudProvider');
   if (cloudProvider) {
     cloudProvider.addEventListener('change', () => {
