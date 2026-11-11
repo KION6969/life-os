@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="utf-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1" />
+<title>DESIGN YOUR RIDE — 3D Configurator</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg:#0a0a0a;
+    --accent:#00aaff;
+    --text:#eef3f8;
+    --muted:#8b96a5;
+    --line:rgba(255,255,255,.09);
+    --glass:rgba(13,16,21,.62);
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--bg);color:var(--text);font-family:'Inter',system-ui,-apple-system,sans-serif}
+  html{scroll-behavior:smooth}
+  body{overflow-x:hidden;min-height:200vh}
+
+  #scene{
+    position:fixed;inset:0;width:100vw;height:100vh;display:block;z-index:0;
+    opacity:0;transition:opacity 1.6s ease;
+  }
+  body.ready #scene{opacity:1}
+
+  /* soft vignette + grain so the 3D blends into the page */
+  .vignette{
+    position:fixed;inset:0;z-index:1;pointer-events:none;
+    background:
+      radial-gradient(ellipse at 50% 45%, rgba(0,0,0,0) 35%, rgba(0,0,0,.55) 78%, rgba(0,0,0,.9) 100%),
+      linear-gradient(to bottom, rgba(10,10,10,.65) 0%, rgba(10,10,10,0) 22%, rgba(10,10,10,0) 72%, rgba(10,10,10,.85) 100%);
+  }
+  .grain{
+    position:fixed;inset:0;z-index:2;pointer-events:none;opacity:.035;
+    background-image:url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='120' height='120'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='3'/%3E%3C/filter%3E%3Crect width='120' height='120' filter='url(%23n)' opacity='.7'/%3E%3C/svg%3E");
+  }
+
+  /* ---------- hero ---------- */
+  .hero{
+    position:relative;z-index:3;min-height:100vh;
+    display:flex;flex-direction:column;align-items:center;justify-content:center;
+    text-align:center;padding:6vh 24px 24vh;pointer-events:none;
+  }
+  .hero > *{pointer-events:auto}
+  .brand{
+    position:absolute;top:32px;left:50%;transform:translateX(-50%);
+    display:flex;align-items:center;gap:9px;
+    font-size:12px;letter-spacing:.42em;font-weight:600;color:#cfd8e3;opacity:0;
+    animation:rise .9s .15s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+  .brand .dot{width:7px;height:7px;border-radius:50%;background:var(--accent);box-shadow:0 0 12px var(--accent)}
+  .brand span{color:var(--muted);font-weight:400;letter-spacing:.42em}
+
+  h1{
+    margin:0;font-size:clamp(2.9rem,8.5vw,7rem);line-height:.92;
+    font-weight:800;letter-spacing:-.045em;text-transform:uppercase;
+    opacity:0;animation:rise 1.1s .25s cubic-bezier(.2,.8,.2,1) forwards;
+    text-shadow:0 20px 80px rgba(0,0,0,.8);
+  }
+  h1 .accent{
+    background:linear-gradient(100deg,#ffffff 0%,#9fdcff 45%,var(--accent) 100%);
+    -webkit-background-clip:text;background-clip:text;color:transparent;
+  }
+  .hero p{
+    margin:22px 0 0;font-size:clamp(.95rem,1.6vw,1.15rem);color:var(--muted);
+    font-weight:400;letter-spacing:.02em;
+    text-shadow:0 2px 24px rgba(0,0,0,.9);
+    opacity:0;animation:rise 1.1s .4s cubic-bezier(.2,.8,.2,1) forwards;
+  }
+  .cta{
+    margin-top:36px;padding:14px 26px;border-radius:999px;cursor:pointer;
+    background:transparent;color:var(--text);border:1px solid rgba(0,170,255,.55);
+    font:inherit;font-size:13px;font-weight:600;letter-spacing:.14em;text-transform:uppercase;
+    display:inline-flex;align-items:center;gap:10px;
+    transition:background .3s,box-shadow .3s,transform .2s,border-color .3s;
+    opacity:0;animation:rise 1.1s .55s cubic-bezier(.2,.8,.2,1) forwards;
+    backdrop-filter:blur(6px);
+  }
+  .cta span{transition:transform .3s}
+  .cta:hover{background:rgba(0,170,255,.12);box-shadow:0 0 40px rgba(0,170,255,.28);border-color:var(--accent)}
+  .cta:hover span{transform:translateY(3px)}
+  .cta:active{transform:scale(.98)}
+  .hint{
+    position:absolute;bottom:30px;left:50%;transform:translateX(-50%);
+    font-size:11px;letter-spacing:.2em;text-transform:uppercase;color:#5f6976;
+    opacity:0;animation:fade 1.2s 1.2s forwards;
+  }
+
+  @keyframes rise{from{opacity:0;transform:translateY(22px)}to{opacity:1;transform:translateY(0)}}
+  @keyframes fade{from{opacity:0}to{opacity:1}}
+
+  /* ---------- controls ---------- */
+  .controls{
+    position:relative;z-index:3;min-height:100vh;
+    display:flex;align-items:flex-end;justify-content:center;
+    padding:0 20px 6vh;
+  }
+  .panel{
+    width:min(760px,100%);
+    background:var(--glass);border:1px solid var(--line);border-radius:24px;
+    backdrop-filter:blur(22px) saturate(140%);-webkit-backdrop-filter:blur(22px) saturate(140%);
+    box-shadow:0 30px 80px rgba(0,0,0,.6), inset 0 1px 0 rgba(255,255,255,.06);
+    padding:26px 28px 24px;
+    transform:translateY(26px);opacity:0;
+    transition:transform .9s cubic-bezier(.2,.8,.2,1),opacity .9s;
+  }
+  body.ready .panel{transform:translateY(0);opacity:1}
+  .panel-head{display:flex;align-items:baseline;justify-content:space-between;gap:16px;margin-bottom:22px}
+  .panel-head h2{margin:0;font-size:13px;font-weight:600;letter-spacing:.28em;text-transform:uppercase;color:#cfd8e3}
+  .panel-head .spec{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:#5f6976}
+
+  .row{display:grid;grid-template-columns:120px 1fr;align-items:center;gap:18px;padding:14px 0;border-top:1px solid rgba(255,255,255,.05)}
+  .row:first-of-type{border-top:none;padding-top:0}
+  .row .label{font-size:11px;letter-spacing:.18em;text-transform:uppercase;color:var(--muted);font-weight:500}
+
+  .swatches{display:flex;flex-wrap:wrap;gap:12px}
+  .swatch{
+    width:34px;height:34px;border-radius:50%;border:none;cursor:pointer;position:relative;
+    box-shadow:inset 0 1px 2px rgba(255,255,255,.25), 0 4px 14px rgba(0,0,0,.5);
+    transition:transform .22s cubic-bezier(.2,.8,.2,1), box-shadow .22s;
+    outline:none;
+  }
+  .swatch:hover{transform:scale(1.12)}
+  .swatch:focus-visible{box-shadow:0 0 0 2px #0a0a0a,0 0 0 4px var(--accent)}
+  .swatch::after{
+    content:"";position:absolute;inset:-6px;border-radius:50%;
+    border:1px solid transparent;transition:border-color .25s,transform .25s;transform:scale(.9);
+  }
+  .swatch[aria-pressed="true"]::after{border-color:var(--accent);transform:scale(1);box-shadow:0 0 18px rgba(0,170,255,.45)}
+
+  .toggles{display:flex;flex-wrap:wrap;gap:12px}
+  .toggle{
+    display:inline-flex;align-items:center;gap:11px;padding:9px 14px 9px 11px;
+    border-radius:999px;border:1px solid var(--line);background:rgba(255,255,255,.03);
+    color:var(--text);font:inherit;font-size:12px;font-weight:500;letter-spacing:.06em;
+    cursor:pointer;transition:border-color .25s,background .25s,box-shadow .25s;outline:none;
+  }
+  .toggle:hover{border-color:rgba(255,255,255,.2);background:rgba(255,255,255,.06)}
+  .toggle:focus-visible{box-shadow:0 0 0 2px #0a0a0a,0 0 0 4px var(--accent)}
+  .toggle .track{width:34px;height:19px;border-radius:999px;background:#2a3038;position:relative;transition:background .25s}
+  .toggle .knob{
+    position:absolute;top:2px;left:2px;width:15px;height:15px;border-radius:50%;
+    background:#8b96a5;transition:transform .25s cubic-bezier(.2,.8,.2,1),background .25s;
+  }
+  .toggle[aria-pressed="true"]{border-color:rgba(0,170,255,.45);background:rgba(0,170,255,.08)}
+  .toggle[aria-pressed="true"] .track{background:rgba(0,170,255,.28)}
+  .toggle[aria-pressed="true"] .knob{transform:translateX(15px);background:var(--accent);box-shadow:0 0 12px var(--accent)}
+
+  .panel-foot{display:flex;justify-content:space-between;gap:16px;margin-top:20px;padding-top:16px;border-top:1px solid rgba(255,255,255,.05);font-size:11px;color:#5f6976;letter-spacing:.08em}
+  .panel-foot .kbd{color:#9aa6b4}
+
+  /* ---------- loading ---------- */
+  .loading{
+    position:fixed;inset:0;z-index:20;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;
+    background:var(--bg);transition:opacity .8s ease,visibility .8s;
+  }
+  .loading.hide{opacity:0;visibility:hidden}
+  .spinner{width:26px;height:26px;border-radius:50%;border:2px solid rgba(255,255,255,.12);border-top-color:var(--accent);animation:spin .9s linear infinite}
+  .loading p{margin:0;font-size:11px;letter-spacing:.28em;text-transform:uppercase;color:var(--muted)}
+  @keyframes spin{to{transform:rotate(360deg)}}
+
+  @media (max-width:720px){
+    .controls{padding:0 12px 3vh}
+    .panel{padding:22px 20px;border-radius:20px}
+    .row{grid-template-columns:1fr;gap:12px;padding:16px 0}
+    .swatches{gap:10px}
+    .swatch{width:32px;height:32px}
+    .hero{padding-bottom:16vh}
+    .hint{display:none}
+    .panel-foot{flex-direction:column;gap:6px}
+  }
+  @media (prefers-reduced-motion:reduce){
+    *{animation-duration:.01ms!important;transition-duration:.01ms!important}
+  }
+</style>
+</head>
+<body>
+  <canvas id="scene" aria-label="3D car configurator"></canvas>
+  <div class="vignette"></div>
+  <div class="grain"></div>
+
+  <header class="hero">
+    <div class="brand"><span class="dot"></span>NOVA<span>MOTORS</span></div>
+    <h1>Design<br><span class="accent">Your Ride</span></h1>
+    <p>Customize your dream car in 3D</p>
+    <button class="cta" id="explore">Explore Now <span>↓</span></button>
+    <div class="hint">Drag to rotate · Scroll to zoom</div>
+  </header>
+
+  <main id="controls" class="controls">
+    <section class="panel" aria-label="Car configurator controls">
+      <div class="panel-head">
+        <h2>Configurator</h2>
+        <span class="spec">Nova GT · Concept</span>
+      </div>
+
+      <div class="row">
+        <span class="label">Body colour</span>
+        <div class="swatches" id="swatches">
+          <button class="swatch" data-color="#d7263d" style="background:#d7263d" aria-label="Red" aria-pressed="false"></button>
+          <button class="swatch" data-color="#0a6cff" style="background:#0a6cff" aria-label="Blue" aria-pressed="true"></button>
+          <button class="swatch" data-color="#e8eef5" style="background:#e8eef5" aria-label="White" aria-pressed="false"></button>
+          <button class="swatch" data-color="#15171b" style="background:#15171b" aria-label="Black" aria-pressed="false"></button>
+          <button class="swatch" data-color="#15a05a" style="background:#15a05a" aria-label="Green" aria-pressed="false"></button>
+          <button class="swatch" data-color="#d4af37" style="background:#d4af37" aria-label="Gold" aria-pressed="false"></button>
+        </div>
+      </div>
+
+      <div class="row">
+        <span class="label">Experience</span>
+        <div class="toggles">
+          <button class="toggle" id="lightsBtn" aria-pressed="true">
+            <span class="track"><span class="knob"></span></span> Headlights
+          </button>
+          <button class="toggle" id="spinBtn" aria-pressed="true">
+            <span class="track"><span class="knob"></span></span> Auto-spin
+          </button>
+        </div>
+      </div>
+
+      <div class="panel-foot">
+        <span>Drag to orbit · Scroll to zoom</span>
+        <span class="kbd">Built with Three.js</span>
+      </div>
+    </section>
+  </main>
+
+  <div class="loading" id="loading">
+    <div class="spinner"></div>
+    <p>Building your ride</p>
+  </div>
+
+<script type="importmap">
+{
+  "imports": {
+    "three": "https://unpkg.com/three@0.161.0/build/three.module.js",
+    "three/addons/": "https://unpkg.com/three@0.161.0/examples/jsm/"
+  }
+}
+</script>
+
+<script type="module">
+import * as THREE from 'three';
+import { OrbitControls } from 'three/addons/controls/OrbitControls.js';
+import { RoomEnvironment } from 'three/addons/environments/RoomEnvironment.js';
+import { RoundedBoxGeometry } from 'three/addons/geometries/RoundedBoxGeometry.js';
+
+/* ------------------------------------------------------------------ *
+ * Renderer / scene / camera
+ * ------------------------------------------------------------------ */
+const canvas = document.getElementById('scene');
+const renderer = new THREE.WebGLRenderer({ canvas, antialias: true, powerPreference: 'high-performance' });
+renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+renderer.setSize(window.innerWidth, window.innerHeight);
+renderer.shadowMap.enabled = true;
+renderer.shadowMap.type = THREE.PCFSoftShadowMap;
+renderer.toneMapping = THREE.ACESFilmicToneMapping;
+renderer.toneMappingExposure = 1.05;
+
+const scene = new THREE.Scene();
+scene.background = new THREE.Color(0x0a0a0a);
+scene.fog = new THREE.Fog(0x0a0a0a, 14, 46);
+
+const camera = new THREE.PerspectiveCamera(38, window.innerWidth / window.innerHeight, 0.1, 120);
+camera.position.set(6.8, 3.0, 7.6);
+
+const orbit = new OrbitControls(camera, canvas);
+orbit.target.set(0, 0.85, 0);
+orbit.enableDamping = true;
+orbit.dampingFactor = 0.06;
+orbit.enablePan = false;
+orbit.minDistance = 4.6;
+orbit.maxDistance = 17;
+orbit.minPolarAngle = 0.22;
+orbit.maxPolarAngle = Math.PI * 0.495;
+orbit.autoRotate = true;
+orbit.autoRotateSpeed = 1.3;
+
+/* studio environment for realistic paint reflections */
+try {
+  const pmrem = new THREE.PMREMGenerator(renderer);
+  const envRT = pmrem.fromScene(new RoomEnvironment(), 0.04);
+  scene.environment = envRT.texture;
+  pmrem.dispose();
+} catch (e) {
+  console.warn('Environment map unavailable:', e);
+}
+
+/* ------------------------------------------------------------------ *
+ * Lighting
+ * ------------------------------------------------------------------ */
+scene.add(new THREE.HemisphereLight(0x9bb8ff, 0x08090b, 0.55));
+
+const key = new THREE.DirectionalLight(0xffffff, 2.4);
+key.position.set(6, 9, 5);
+key.castShadow = true;
+key.shadow.mapSize.set(2048, 2048);
+key.shadow.camera.left = -8;
+key.shadow.camera.right = 8;
+key.shadow.camera.top = 8;
+key.shadow.camera.bottom = -8;
+key.shadow.camera.near = 0.5;
+key.shadow.camera.far = 30;
+key.shadow.bias = -0.0006;
+key.shadow.normalBias = 0.02;
+scene.add(key);
+
+const rim = new THREE.DirectionalLight(0x00aaff, 2.0);
+rim.position.set(-7, 4, -6);
+scene.add(rim);
+
+const fill = new THREE.DirectionalLight(0xffffff, 0.5);
+fill.position.set(-4, 3, 7);
+scene.add(fill);
+
+const spot = new THREE.SpotLight(0x00aaff, 320, 30, 0.42, 0.65, 2);
+spot.position.set(0, 10, 2.5);
+spot.target.position.set(0, 0, 0);
+spot.castShadow = true;
+spot.shadow.mapSize.set(1024, 1024);
+spot.shadow.bias = -0.0008;
+scene.add(spot);
+scene.add(spot.target);
+
+/* ------------------------------------------------------------------ *
+ * Ground
+ * ------------------------------------------------------------------ */
+const ground = new THREE.Mesh(
+  new THREE.CircleGeometry(34, 72),
+  new THREE.MeshStandardMaterial({ color: 0x0b0e12, roughness: 0.34, metalness: 0.62, envMapIntensity: 0.9 })
+);
+ground.rotation.x = -Math.PI / 2;
+ground.receiveShadow = true;
+scene.add(ground);
+
+const grid = new THREE.GridHelper(44, 44, 0x123047, 0x0d1620);
+grid.position.y = 0.002;
+grid.material.transparent = true;
+grid.material.opacity = 0.55;
+scene.add(grid);
+
+/* soft accent pool under the car */
+const pool = new THREE.Mesh(
+  new THREE.CircleGeometry(3.4, 64),
+  new THREE.MeshBasicMaterial({ color: 0x00aaff, transparent: true, opacity: 0.05, depthWrite: false })
+);
+pool.rotation.x = -Math.PI / 2;
+pool.position.y = 0.004;
+scene.add(pool);
+
+/* ------------------------------------------------------------------ *
+ * Materials
+ * ------------------------------------------------------------------ */
+const paint = new THREE.MeshPhysicalMaterial({
+  color: 0x0a6cff, metalness: 0.8, roughness: 0.28, envMapIntensity: 2.0,
+  clearcoat: 1, clearcoatRoughness: 0.12
+});
+const trim = new THREE.MeshStandardMaterial({ color: 0x0b0d10, metalness: 0.7, roughness: 0.45 });
+const chrome = new THREE.MeshStandardMaterial({ color: 0xdbe4ee, metalness: 1, roughness: 0.18, envMapIntensity: 1.6 });
+const tire = new THREE.MeshStandardMaterial({ color: 0x0e0f11, metalness: 0.05, roughness: 0.95 });
+const glass = new THREE.MeshPhysicalMaterial({
+  color: 0x0a1826, metalness: 0.25, roughness: 0.04,
+  transparent: true, opacity: 0.86, envMapIntensity: 2.2,
+  clearcoat: 1, clearcoatRoughness: 0.05
+});
+const headMat = new THREE.MeshStandardMaterial({
+  color: 0xffffff, emissive: 0x9fdcff, emissiveIntensity: 3.2, roughness: 0.2, metalness: 0.1
+});
+const tailMat = new THREE.MeshStandardMaterial({
+  color: 0x2a0206, emissive: 0xff2233, emissiveIntensity: 1.6, roughness: 0.3
+});
+
+/* ------------------------------------------------------------------ *
+ * Car (all primitives)
+ * ------------------------------------------------------------------ */
+const car = new THREE.Group();
+scene.add(car);
+
+function part(geo, mat, x, y, z, rot) {
+  const m = new THREE.Mesh(geo, mat);
+  m.position.set(x, y, z);
+  if (rot) m.rotation.set(rot[0] || 0, rot[1] || 0, rot[2] || 0);
+  m.castShadow = true;
+  m.receiveShadow = true;
+  car.add(m);
+  return m;
+}
+
+/* main chassis + body */
+part(new RoundedBoxGeometry(4.55, 0.52, 1.96, 4, 0.14), paint, 0, 0.64, 0);
+part(new RoundedBoxGeometry(3.05, 0.42, 1.82, 4, 0.13), paint, -0.18, 0.94, 0);
+
+/* hood, slightly nose-down */
+part(new RoundedBoxGeometry(1.85, 0.3, 1.74, 4, 0.1), paint, 1.5, 0.94, 0, [0, 0, -0.055]);
+
+/* rear deck */
+part(new RoundedBoxGeometry(1.15, 0.34, 1.78, 4, 0.1), paint, -1.72, 1.0, 0);
+
+/* glass canopy */
+const canopy = new THREE.Mesh(new THREE.SphereGeometry(1, 40, 28), glass);
+canopy.scale.set(0.88, 0.36, 0.7);
+canopy.position.set(-0.25, 1.24, 0);
+canopy.castShadow = true;
+car.add(canopy);
+
+/* windshield / rear glass tint strips */
+part(new RoundedBoxGeometry(0.06, 0.5, 1.44, 3, 0.02), glass, 0.78, 1.18, 0, [0, 0, 0.5]);
+part(new RoundedBoxGeometry(0.06, 0.42, 1.34, 3, 0.02), glass, -1.2, 1.16, 0, [0, 0, -0.55]);
+
+/* side skirts and splitter */
+part(new THREE.BoxGeometry(3.4, 0.12, 0.1), trim, 0, 0.36, 0.99);
+part(new THREE.BoxGeometry(3.4, 0.12, 0.1), trim, 0, 0.36, -0.99);
+part(new THREE.BoxGeometry(1.5, 0.1, 1.84), trim, 1.92, 0.35, 0);
+
+/* rear diffuser */
+part(new THREE.BoxGeometry(0.5, 0.16, 1.7), trim, -2.22, 0.36, 0);
+
+/* spoiler */
+part(new THREE.BoxGeometry(0.16, 0.06, 1.8), trim, -2.05, 1.34, 0);
+part(new THREE.BoxGeometry(0.1, 0.26, 0.08), trim, -2.05, 1.16, 0.72);
+part(new THREE.BoxGeometry(0.1, 0.26, 0.08), trim, -2.05, 1.16, -0.72);
+
+/* side mirrors */
+part(new RoundedBoxGeometry(0.26, 0.12, 0.34, 3, 0.04), trim, 0.62, 1.12, 1.02);
+part(new RoundedBoxGeometry(0.26, 0.12, 0.34, 3, 0.04), trim, 0.62, 1.12, -1.02);
+
+/* headlights */
+const headLights = [];
+[-0.62, 0.62].forEach((z) => {
+  const h = part(new THREE.SphereGeometry(0.11, 20, 16), headMat, 2.3, 0.8, z);
+  headLights.push(h);
+});
+/* front light bar accent */
+part(new THREE.BoxGeometry(0.06, 0.05, 1.18), headMat, 2.34, 0.68, 0);
+
+/* taillights */
+const tailLights = [];
+[-0.66, 0.66].forEach((z) => {
+  const t = part(new THREE.BoxGeometry(0.08, 0.16, 0.4), tailMat, -2.32, 0.86, z);
+  tailLights.push(t);
+});
+part(new THREE.BoxGeometry(0.06, 0.06, 1.5), tailMat, -2.31, 0.86, 0);
+
+/* wheels */
+const wheelGeo = new THREE.CylinderGeometry(0.45, 0.45, 0.34, 40);
+const rimGeo = new THREE.CylinderGeometry(0.27, 0.27, 0.36, 32);
+const hubGeo = new THREE.CylinderGeometry(0.08, 0.08, 0.38, 20);
+const spokeGeo = new THREE.BoxGeometry(0.04, 0.5, 0.07);
+
+const wheels = [];
+function addWheel(x, z) {
+  const g = new THREE.Group();
+  const t = new THREE.Mesh(wheelGeo, tire);
+  t.rotation.x = Math.PI / 2;
+  t.castShadow = true;
+  g.add(t);
+
+  const r = new THREE.Mesh(rimGeo, chrome);
+  r.rotation.x = Math.PI / 2;
+  g.add(r);
+
+  const hub = new THREE.Mesh(hubGeo, trim);
+  hub.rotation.x = Math.PI / 2;
+  g.add(hub);
+
+  for (let i = 0; i < 5; i++) {
+    const s = new THREE.Mesh(spokeGeo, chrome);
+    s.rotation.set(0, 0, (i / 5) * Math.PI);
+    g.add(s);
+  }
+
+  g.position.set(x, 0.45, z);
+  car.add(g);
+  wheels.push(g);
+}
+addWheel(1.42, 0.98);
+addWheel(1.42, -0.98);
+addWheel(-1.42, 0.98);
+addWheel(-1.42, -0.98);
+
+/* headlight glow lights (toggled) */
+const beamLights = [];
+[-0.62, 0.62].forEach((z) => {
+  const l = new THREE.PointLight(0x9fdcff, 0, 9, 2);
+  l.position.set(2.55, 0.8, z);
+  car.add(l);
+  beamLights.push(l);
+});
+
+/* ------------------------------------------------------------------ *
+ * UI state
+ * ------------------------------------------------------------------ */
+let lightsOn = true;
+let targetColor = new THREE.Color(0x0a6cff);
+
+const swatches = [...document.querySelectorAll('.swatch')];
+swatches.forEach((btn) => {
+  btn.addEventListener('click', () => {
+    swatches.forEach((b) => b.setAttribute('aria-pressed', 'false'));
+    btn.setAttribute('aria-pressed', 'true');
+    targetColor.set(btn.dataset.color);
+  });
+});
+
+const lightsBtn = document.getElementById('lightsBtn');
+lightsBtn.addEventListener('click', () => {
+  lightsOn = !lightsOn;
+  lightsBtn.setAttribute('aria-pressed', String(lightsOn));
+  headMat.emissiveIntensity = lightsOn ? 3.2 : 0.15;
+  headMat.color.set(lightsOn ? 0xffffff : 0x2a3238);
+  beamLights.forEach((l) => (l.intensity = lightsOn ? 9 : 0));
+});
+
+const spinBtn = document.getElementById('spinBtn');
+spinBtn.addEventListener('click', () => {
+  orbit.autoRotate = !orbit.autoRotate;
+  spinBtn.setAttribute('aria-pressed', String(orbit.autoRotate));
+});
+
+document.getElementById('explore').addEventListener('click', () => {
+  document.getElementById('controls').scrollIntoView({ behavior: 'smooth', block: 'end' });
+});
+
+/* ------------------------------------------------------------------ *
+ * Resize
+ * ------------------------------------------------------------------ */
+function resize() {
+  const w = window.innerWidth;
+  const h = window.innerHeight;
+  camera.aspect = w / h;
+  camera.updateProjectionMatrix();
+  renderer.setSize(w, h);
+  renderer.setPixelRatio(Math.min(window.devicePixelRatio, 2));
+}
+window.addEventListener('resize', resize);
+
+/* ------------------------------------------------------------------ *
+ * Animation loop
+ * ------------------------------------------------------------------ */
+const clock = new THREE.Clock();
+let firstFrame = true;
+
+function animate() {
+  const t = clock.getElapsedTime();
+
+  /* gentle float + subtle roll */
+  car.position.y = Math.sin(t * 1.25) * 0.045;
+  car.rotation.z = Math.sin(t * 0.8) * 0.006;
+  car.rotation.x = Math.sin(t * 0.6) * 0.004;
+
+  /* wheels turn slowly while spinning */
+  wheels.forEach((w) => (w.rotation.z -= 0.006));
+
+  /* smooth paint colour transition */
+  paint.color.lerp(targetColor, 0.075);
+
+  /* headlight pulse */
+  if (lightsOn) {
+    const pulse = 3.0 + Math.sin(t * 2.2) * 0.35;
+    headMat.emissiveIntensity = pulse;
+  }
+
+  orbit.update();
+  renderer.render(scene, camera);
+
+  if (firstFrame) {
+    firstFrame = false;
+    document.body.classList.add('ready');
+    setTimeout(() => document.getElementById('loading').classList.add('hide'), 350);
+  }
+  requestAnimationFrame(animate);
+}
+animate();
+
+/* safety: if CDN modules fail, still reveal the page */
+setTimeout(() => document.getElementById('loading').classList.add('hide'), 6000);
+</script>
+</body>
+</html>
