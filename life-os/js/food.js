@@ -333,10 +333,6 @@
     const macro = document.getElementById('macroCard');
     if (macro) {
       const kcalPct = Math.min(100, (t.kcal / Math.max(1, g.kcal)) * 100);
-      const drops = Array.from({ length: 8 }, (_, i) => {
-        const threshold = (g.water / 8) * (i + 1);
-        return `<span class="water-drop${t.water >= threshold - 0.001 ? ' on' : ''}"></span>`;
-      }).join('');
       macro.innerHTML = `
         <div class="macro-top">
           <div class="macro-ring-wrap">
@@ -358,10 +354,7 @@
           </div>
         </div>
         <div class="macro-foot">
-          <div class="water-block">
-            <div class="water-drops" aria-hidden="true">${drops}</div>
-            <span class="water-val"><b>${t.water.toFixed(1)}</b> / ${g.water.toFixed(1)} L</span>
-          </div>
+          <div class="water-glass" aria-hidden="true">\n             <div class="water-glass-fill" style="height:${Math.min(100, (t.water / Math.max(0.1, g.water)) * 100)}%"></div>\n             <span class="water-glass-label">${t.water.toFixed(1)}L / ${g.water.toFixed(1)}L</span>\n           </div>
           <div class="water-actions">
             <button class="btn tiny" data-water="250">+250 ml</button>
             <button class="btn tiny" data-water="500">+500 ml</button>
@@ -557,3 +550,5 @@
   });
   if (today) today.addEventListener('click', () => { foodDate = LOS.todayKey(); renderFood(); });
 })();
+
+

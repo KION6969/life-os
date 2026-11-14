@@ -3,7 +3,7 @@
    App shell is cached for offline use; the AI Chef proxy is
    always network-only so it never serves a stale suggestion.
    ============================================================ */
-const VERSION = 'lifeos-v1.3.21';
+const VERSION = 'lifeos-v1.3.22';
 const SHELL = [
   './',
   './index.html',

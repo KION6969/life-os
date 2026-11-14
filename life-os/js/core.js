@@ -638,7 +638,7 @@ window.LOS = window.LOS || {};
         return `<div class="tl-item${done ? ' done' : ''}${isNow ? ' now' : ''}${isNext ? ' next' : ''}" data-type="${esc(s.type)}">
           <div class="tl-time"><b>${fmtTime(s.start)}</b>${fmtTime(s.end)}</div>
           <div class="tl-line"><span class="tl-dot"></span>
-            <div style="min-width:0"><div class="tl-title">${esc(s.label)}</div><div class="tl-sub">${esc(s.type)}</div></div>
+            <div style="min-width:0"><div class="tl-title">${esc(s.label)}</div></div>
           </div>
           <button class="tl-check" data-done="${esc(s.id)}" aria-label="${done ? 'Mark not done' : 'Mark done'}: ${esc(s.label)}" aria-pressed="${done}">
             ${LOS.icon('check')}

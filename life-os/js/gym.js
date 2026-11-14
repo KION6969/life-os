@@ -316,7 +316,7 @@
           <button class="ex-head" data-ex="${i}" aria-expanded="${open}">
             <span class="ex-index">${String(i + 1).padStart(2, '0')}</span>
             <span class="ex-name">${esc(ex.name)}</span>
-            <span class="ex-meta">${ex.sets} × ${esc(ex.reps)} · ${ex.rest ? ex.rest + 's' : '—'}</span>
+            <span class="ex-meta">${ex.sets} × ${esc(ex.reps)} · ${ex.rest ? ex.rest + 's' : '—'} · ~${Math.max(1, Math.round((ex.sets * ((ex.rest || 0) + 40)) / 60))}m</span>
             <span class="ex-chev">${icon('chevron')}</span>
           </button>
           <div class="ex-body">
