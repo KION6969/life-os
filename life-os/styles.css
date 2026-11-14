@@ -851,3 +851,7 @@ html[data-compact="on"] .hero-metrics{gap:12px}
 .chef-ings{display:flex;flex-wrap:wrap;gap:5px;margin-top:8px}
 .chef-ings span{font-family:var(--mono);font-size:9.5px;padding:3px 7px;border-radius:6px;border:1px solid var(--line-soft);background:rgba(255,255,255,.03);color:var(--muted)}
 .chef-ings span b{color:var(--accent);font-weight:500;margin-left:2px}
+
+.confetti{position:fixed;inset:0;pointer-events:none;overflow:hidden;z-index:9999}
+.confetti span{position:absolute;top:-10px;width:8px;height:12px;border-radius:2px;animation:confettiFall 1.4s ease-out forwards}
+@keyframes confettiFall{0%{transform:translateY(0) rotate(0);opacity:1}100%{transform:translateY(110vh) rotate(720deg);opacity:0}}

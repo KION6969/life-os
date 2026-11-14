@@ -448,6 +448,9 @@
       <button class="icon-btn" data-close aria-label="Close"><svg class="ic"><use href="#i-close"/></svg></button>
     </div>
     <form id="mealForm" class="form-grid" autocomplete="off">
+      <label class="field span-2"><span>Quick add (optional)</span><select id="presetMeal">
+        <option value="">— choose a preset or type below —</option>
+      </select></label>
       <label class="field span-2"><span>Meal name</span><input name="name" maxlength="80" placeholder="e.g. Chicken rice bowl" required></label>
       <label class="field"><span>Category</span><select name="cat" id="mealCat"></select></label>
       <label class="field"><span>Calories</span><input name="kcal" type="number" min="0" max="5000" step="1" placeholder="kcal" required></label>

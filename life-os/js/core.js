@@ -391,7 +391,25 @@ window.LOS = window.LOS || {};
       setTimeout(() => el.remove(), 260);
     }, ms);
   }
-  LOS.toast = toast;
+  function celebrate(msg) {
+    try { if (navigator.vibrate) navigator.vibrate([60, 40, 60]); } catch (e) {}
+    toast(msg, 'ok', 3200);
+    /* confetti burst */
+    const layer = document.createElement('div');
+    layer.className = 'confetti';
+    const colors = ['#00ffa3', '#22d3ee', '#a78bfa', '#ffb020', '#ff5ea8'];
+    for (let i = 0; i < 28; i++) {
+      const p = document.createElement('span');
+      p.style.left = Math.random() * 100 + '%';
+      p.style.background = colors[i % colors.length];
+      p.style.animationDelay = (Math.random() * 0.3) + 's';
+      p.style.transform = `rotate(${Math.random() * 360}deg)`;
+      layer.appendChild(p);
+    }
+    document.body.appendChild(layer);
+    setTimeout(() => layer.remove(), 1600);
+  }
+  LOS.celebrate = celebrate;
 
   let confirmCallback = null;
   function confirmAction(title, text, okLabel, cb) {
@@ -744,7 +762,10 @@ window.LOS = window.LOS || {};
     if (LOS.currentPage === 'food' && LOS.renderFood) LOS.renderFood();
     if (LOS.currentPage === 'home') renderHome();
     const g = goalsFor();
-    toast(`Water ${ml > 0 ? '+' : ''}${ml} ml Â· ${day.water.toFixed(2)} / ${g.water.toFixed(1)} L`, 'ok', 1800);
+    toast(`Water ${ml > 0 ? '+' : ''}${ml} ml · ${day.water.toFixed(2)} / ${g.water.toFixed(1)} L`, 'ok', 1800);
+    if (day.water >= g.water * 0.99) {
+      celebrate('Hydration goal reached — great job!');
+    }
   };
 
   /* apply persisted theme on load */

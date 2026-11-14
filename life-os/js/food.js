@@ -1,5 +1,5 @@
-/* ============================================================
-   LIFE OS — food: macros, meals, hydration, AI chef
+﻿/* ============================================================
+   LIFE OS â€” food: macros, meals, hydration, AI chef
    ============================================================ */
 (function () {
   'use strict';
@@ -9,7 +9,29 @@
   let foodDate = LOS.todayKey();
   let chefItems = [];
 
-  const CHEF_POOL = [
+  const PREMADE_MEALS = [
+    { name: 'Scrambled eggs on toast', cat: 'breakfast', kcal: 320, p: 22, c: 28, f: 14, fib: 2 },
+    { name: 'Oatmeal with banana and honey', cat: 'breakfast', kcal: 380, p: 12, c: 62, f: 9, fib: 7 },
+    { name: 'Greek yoghurt parfait', cat: 'breakfast', kcal: 290, p: 20, c: 34, f: 8, fib: 4 },
+    { name: 'Idli with sambar', cat: 'breakfast', kcal: 340, p: 12, c: 58, f: 6, fib: 6 },
+    { name: 'Poha with peanuts', cat: 'breakfast', kcal: 360, p: 10, c: 52, f: 12, fib: 5 },
+    { name: 'Avocado toast with egg', cat: 'breakfast', kcal: 410, p: 18, c: 34, f: 22, fib: 6 },
+    { name: 'Chicken rice bowl', cat: 'lunch', kcal: 520, p: 45, c: 55, f: 12, fib: 5 },
+    { name: 'Dal tadka with rice', cat: 'lunch', kcal: 480, p: 18, c: 72, f: 10, fib: 10 },
+    { name: 'Paneer bhurji with roti', cat: 'lunch', kcal: 460, p: 24, c: 40, f: 22, fib: 5 },
+    { name: 'Rajma chawal', cat: 'lunch', kcal: 560, p: 24, c: 92, f: 9, fib: 14 },
+    { name: 'Tuna salad sandwich', cat: 'lunch', kcal: 420, p: 34, c: 42, f: 12, fib: 4 },
+    { name: 'Caesar salad with chicken', cat: 'lunch', kcal: 450, p: 40, c: 18, f: 24, fib: 4 },
+    { name: 'Grilled salmon with veggies', cat: 'dinner', kcal: 520, p: 42, c: 24, f: 26, fib: 6 },
+    { name: 'Chicken tikka with roti', cat: 'dinner', kcal: 580, p: 46, c: 48, f: 22, fib: 4 },
+    { name: 'Tofu stir-fry with noodles', cat: 'dinner', kcal: 480, p: 28, c: 58, f: 14, fib: 7 },
+    { name: 'Chickpea curry with rice', cat: 'dinner', kcal: 540, p: 22, c: 70, f: 16, fib: 10 },
+    { name: 'Protein shake', cat: 'post', kcal: 220, p: 30, c: 18, f: 4, fib: 2 },
+    { name: 'Banana with peanut butter', cat: 'snack', kcal: 280, p: 8, c: 34, f: 14, fib: 4 },
+    { name: 'Apple and almonds', cat: 'snack', kcal: 220, p: 6, c: 22, f: 12, fib: 5 },
+    { name: 'Protein bar', cat: 'snack', kcal: 210, p: 20, c: 22, f: 7, fib: 3 }
+  ];
+    const CHEF_POOL = [
     { name: 'Grilled chicken rice bowl', kcal: 520, p: 45, c: 55, f: 12, fib: 5, cuisine: 'western', tags: ['meat'], ings: ['chicken', 'rice', 'yoghurt', 'spices'] },
     { name: 'Salmon + sweet potato', kcal: 560, p: 38, c: 44, f: 22, fib: 6, cuisine: 'western', tags: ['fish'], ings: ['salmon', 'sweet potato', 'olive oil', 'broccoli'] },
     { name: 'Greek yoghurt + berries', kcal: 240, p: 22, c: 24, f: 6, fib: 4, cuisine: 'western', tags: ['dairy'], ings: ['yoghurt', 'berries', 'oats', 'honey'] },
@@ -17,7 +39,6 @@
     { name: 'Turkey wrap + salad', kcal: 380, p: 32, c: 38, f: 10, fib: 4, cuisine: 'western', tags: ['meat'], ings: ['turkey', 'tortilla', 'lettuce', 'tomato'] },
     { name: 'Protein shake + banana', kcal: 300, p: 30, c: 36, f: 4, fib: 3, cuisine: 'any', tags: ['dairy'], ings: ['whey', 'milk', 'banana'] },
     { name: 'Egg omelette + toast', kcal: 420, p: 26, c: 32, f: 20, fib: 3, cuisine: 'western', tags: ['egg', 'dairy'], ings: ['eggs', 'bread', 'butter', 'cheese'] },
-    { name: 'Beef mince pasta', kcal: 620, p: 42, c: 68, f: 18, fib: 6, cuisine: 'western', tags: ['meat'], ings: ['beef', 'pasta', 'tomato', 'onion'] },
     { name: 'Cottage cheese + pineapple', kcal: 220, p: 24, c: 18, f: 4, fib: 2, cuisine: 'western', tags: ['dairy'], ings: ['cottage cheese', 'pineapple'] },
     { name: 'Chickpea curry + rice', kcal: 540, p: 22, c: 70, f: 16, fib: 10, cuisine: 'indian', tags: ['plant'], ings: ['chickpeas', 'rice', 'tomato', 'onion', 'spices'] },
     { name: 'Prawn rice paper rolls', kcal: 330, p: 24, c: 42, f: 6, fib: 5, cuisine: 'asian', tags: ['fish'], ings: ['prawns', 'rice paper', 'vegetables', 'herbs'] },
@@ -149,7 +170,12 @@
     LOS.closeModal('mealModal');
     renderFood();
     LOS.renderTop();
-    LOS.toast(`${meal.name} · ${Math.round(meal.kcal)} kcal logged`, 'ok', 2400);
+    LOS.toast(`${meal.name} Â· ${Math.round(meal.kcal)} kcal logged`, 'ok', 2400);
+    const dayAfter = LOS.dayData(foodDate);
+    const t = LOS.totalsFor(dayAfter);
+    const g = LOS.goalsFor();
+    if (t.kcal >= g.kcal * 0.98 && t.kcal <= g.kcal * 1.05) LOS.celebrate('Calorie target hit â€” nailed it!');
+    else if (t.p >= g.protein * 0.98) LOS.celebrate('Protein target hit â€” strong work!');
   }
 
   function remainingFor(day) {
@@ -189,7 +215,7 @@
       return {
         ...item,
         score: kcalFit * 0.46 + proteinFit * 0.28 + fibreFit * 0.08 + cuisineHit * 0.12 + (usesPantry ? 0.18 : 0) + Math.min(0.12, pantryHits * 0.03),
-        why: `${usesPantry ? 'Uses what you have. ' : ''}Covers ${Math.round(item.p)}g protein at ${item.kcal} kcal — about a quarter of your remaining gap.`,
+        why: `${usesPantry ? 'Uses what you have. ' : ''}Covers ${Math.round(item.p)}g protein at ${item.kcal} kcal â€” about a quarter of your remaining gap.`,
         ingredients: (item.ings || []).map((n) => ({ name: n, grams: 100 }))
       };
     });
@@ -230,13 +256,13 @@
         <div class="chef-top">
           <div style="min-width:0">
             <div class="chef-name">${esc(s.name)}</div>
-            <div class="chef-macros">${Math.round(s.kcal)} kcal · P ${Math.round(s.p)} · C ${Math.round(s.c)} · F ${Math.round(s.f)} · Fib ${Math.round(s.fib)}</div>
+            <div class="chef-macros">${Math.round(s.kcal)} kcal Â· P ${Math.round(s.p)} Â· C ${Math.round(s.c)} Â· F ${Math.round(s.f)} Â· Fib ${Math.round(s.fib)}</div>
             ${s.ingredients && s.ingredients.length ? `<div class="chef-ings">${s.ingredients.map((ing) => `<span>${esc(ing.name)} <b>${ing.grams}g</b></span>`).join('')}</div>` : ''}
           </div>
           <button class="btn tiny primary" data-chef-log="${i}">Log</button>
         </div>
         <div class="chef-why">${esc(s.why)}</div>
-        <div class="fine" style="margin-top:6px">${powered ? 'Macros are calculated from the listed gram amounts — adjust in the log form if your portions differ.' : 'Ingredient weights are estimates (100 g each) — adjust in the log form to match your actual portions.'}</div>
+        <div class="fine" style="margin-top:6px">${powered ? 'Macros are calculated from the listed gram amounts â€” adjust in the log form if your portions differ.' : 'Ingredient weights are estimates (100 g each) â€” adjust in the log form to match your actual portions.'}</div>
       </div>`).join('');
   }
 
@@ -356,7 +382,7 @@
           <span class="rem-chip">C <b>${rem.c}g</b></span>
           <span class="rem-chip">F <b>${rem.f}g</b></span>
           <span class="rem-chip">Fib <b>${rem.fib}g</b></span>
-          <span class="rem-chip goal">Per meal · <b>${g.perMeal.kcal} kcal</b> · P ${g.perMeal.p}g</span>
+          <span class="rem-chip goal">Per meal Â· <b>${g.perMeal.kcal} kcal</b> Â· P ${g.perMeal.p}g</span>
         </div>
         <div class="rem-note">${over
           ? 'You are over your calorie target. Keep the next meal light and protein-led.'
@@ -368,7 +394,7 @@
     }
 
     const mealTotal = document.getElementById('mealTotal');
-    if (mealTotal) mealTotal.textContent = `${t.meals} ${t.meals === 1 ? 'item' : 'items'} · ${Math.round(t.kcal)} kcal`;
+    if (mealTotal) mealTotal.textContent = `${t.meals} ${t.meals === 1 ? 'item' : 'items'} Â· ${Math.round(t.kcal)} kcal`;
 
     const favs = document.getElementById('favs');
     if (favs) {
@@ -378,7 +404,7 @@
         favs.hidden = false;
         favs.innerHTML = `<div class="card-head" style="margin-bottom:8px"><h3 style="font-size:13px">Favourites</h3><span class="mono muted">${list.length}</span></div>` +
           list.map((m, i) => `<div class="meal-item fav-item">
-            <div class="meal-info"><b>${esc(m.name)}</b><div class="meal-macros"><i>P</i> ${Math.round(m.p)} · <i>C</i> ${Math.round(m.c)} · <i>F</i> ${Math.round(m.f)} · ${Math.round(m.kcal)} kcal</div></div>
+            <div class="meal-info"><b>${esc(m.name)}</b><div class="meal-macros"><i>P</i> ${Math.round(m.p)} Â· <i>C</i> ${Math.round(m.c)} Â· <i>F</i> ${Math.round(m.f)} Â· ${Math.round(m.kcal)} kcal</div></div>
             <button class="btn tiny primary" data-fav-log="${i}">Log</button>
             <button class="meal-del" data-fav-del="${i}" aria-label="Remove favourite">${icon('trash')}</button>
           </div>`).join('');
@@ -404,7 +430,7 @@
             ${items.map((m) => `<div class="meal-item">
               <div class="meal-info">
                 <b>${esc(m.name)}</b>
-                <div class="meal-macros"><i>P</i> ${Math.round(m.p)} · <i>C</i> ${Math.round(m.c)} · <i>F</i> ${Math.round(m.f)} · <i>Fib</i> ${Math.round(m.fib)}</div>
+                <div class="meal-macros"><i>P</i> ${Math.round(m.p)} Â· <i>C</i> ${Math.round(m.c)} Â· <i>F</i> ${Math.round(m.f)} Â· <i>Fib</i> ${Math.round(m.fib)}</div>
               </div>
               <span class="meal-kcal">${Math.round(m.kcal)} kcal</span>
               <button class="meal-star" data-star-meal="${esc(m.id)}" aria-label="Save as favourite">${icon('spark')}</button>
@@ -435,7 +461,26 @@
     catSelect.innerHTML = LOS.MEAL_CATS.map((c) => `<option value="${c.id}">${c.label}</option>`).join('');
   }
 
-  const mealForm = document.getElementById('mealForm');
+  const presetMeal = document.getElementById('presetMeal');
+  if (presetMeal) {
+    presetMeal.innerHTML = '<option value="">â€” choose a preset or type below â€”</option>' +
+      PREMADE_MEALS.map((m, i) => `<option value="${i}">${m.name} Â· ${m.kcal} kcal</option>`).join('');
+    presetMeal.addEventListener('change', () => {
+      const idx = Number(presetMeal.value);
+      if (isNaN(idx)) return;
+      const m = PREMADE_MEALS[idx];
+      if (!m) return;
+      const form = document.getElementById('mealForm');
+      if (!form) return;
+      form.elements.name.value = m.name;
+      form.elements.cat.value = m.cat;
+      form.elements.kcal.value = m.kcal;
+      form.elements.p.value = m.p;
+      form.elements.c.value = m.c;
+      form.elements.f.value = m.f;
+      form.elements.fib.value = m.fib;
+    });
+  }
   if (mealForm) {
     mealForm.addEventListener('submit', (e) => {
       e.preventDefault();
