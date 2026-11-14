@@ -634,6 +634,9 @@
       return;
     }
 
+    const noteEl = e.target.closest('.ex-note');
+    if (noteEl) { noteEl.classList.toggle('expanded'); return; }
+
     const start = e.target.closest('[data-gym-start]');
     if (start) { startSession(start.dataset.gymStart); return; }
 

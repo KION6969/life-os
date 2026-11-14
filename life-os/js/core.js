@@ -547,7 +547,7 @@ window.LOS = window.LOS || {};
     }
 
     const ring = document.getElementById('scoreRing');
-    if (ring) ring.style.strokeDashoffset = String(326.7 * (1 - score / 100));
+    if (ring) { ring.style.strokeDashoffset = String(326.7 * (1 - score / 100)); ring.classList.toggle('pulse', score >= 80); }
     const scoreVal = document.getElementById('scoreVal');
     if (scoreVal) scoreVal.textContent = score;
 
@@ -665,7 +665,7 @@ window.LOS = window.LOS || {};
     if (hw) {
       hw.innerHTML = habits.map((h) => `<div class="habit${h.done ? ' done' : ''}">
         <button class="habit-check" data-habit="${esc(h.id)}" aria-pressed="${h.done}" aria-label="${esc(h.label)}"><svg class="ic"><use href="#i-check"/></svg></button>
-        <div class="habit-copy"><b>${esc(h.label)}</b><span class="habit-sub">${esc(h.sub)}${(db.habitStreaks && db.habitStreaks[h.id] && db.habitStreaks[h.id].count > 1) ? ` · ${db.habitStreaks[h.id].count}d streak` : ""}</span></div>
+        <div class="habit-copy"><b>${esc(h.label)}</b><span class="habit-sub">${esc(h.sub)}${(db.habitStreaks && db.habitStreaks[h.id] && db.habitStreaks[h.id].count > 1) ? ` · ${db.habitStreaks[h.id].count}d streak` : ""}</span><div class="habit-progress"><i style="width:${h.done ? 100 : 0}%"></i></div></div>
       </div>`).join('');
     }
 
@@ -769,7 +769,7 @@ window.LOS = window.LOS || {};
     maybeStreak();
     if (LOS.currentPage === 'food' && LOS.renderFood) LOS.renderFood();
     if (LOS.currentPage === 'home') renderHome();
-    const g = goalsFor();
+    document.querySelectorAll('.water-glass').forEach((g) => { g.classList.remove('ripple'); void g.offsetWidth; g.classList.add('ripple'); setTimeout(() => g.classList.remove('ripple'), 700); });
     toast(`Water ${ml > 0 ? '+' : ''}${ml} ml · ${day.water.toFixed(2)} / ${g.water.toFixed(1)} L`, 'ok', 1800);
     if (day.water >= g.water * 0.99) {
       celebrate('Hydration goal reached — great job!');
@@ -779,6 +779,8 @@ window.LOS = window.LOS || {};
   /* apply persisted theme on load */
   applyTheme();
 })();
+
+
 
 
 

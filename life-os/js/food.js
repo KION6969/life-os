@@ -417,8 +417,7 @@
           const kcal = items.reduce((n, m) => n + (Number(m.kcal) || 0), 0);
           return `<div class="meal-cat">
             <div class="meal-cat-head"><span>${cat.label}</span><b>${Math.round(kcal)} kcal</b></div>
-            ${items.map((m) => `<div class="meal-item">
-              <div class="meal-info">
+            ${items.map((m) => `<div class="meal-item" data-cat="${m.cat}">              <div class="meal-info">
                 <b>${esc(m.name)}</b>
                 <div class="meal-macros"><i>P</i> ${Math.round(m.p)} Â· <i>C</i> ${Math.round(m.c)} Â· <i>F</i> ${Math.round(m.f)} Â· <i>Fib</i> ${Math.round(m.fib)}</div>
               </div>
@@ -547,6 +546,8 @@
   });
   if (today) today.addEventListener('click', () => { foodDate = LOS.todayKey(); renderFood(); });
 })();
+
+
 
 
 
