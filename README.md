@@ -4,7 +4,7 @@ A local-first life dashboard: timetable, nutrition, training, study and targets,
 
 ## Deploy to Vercel
 
-Live at: **https://lifeos-deploy3.vercel.app**
+Live at: **https://lifeos-deploy4.vercel.app**
 
 To redeploy:
 1. Install the Vercel CLI: `npm i -g vercel`
