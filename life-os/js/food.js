@@ -370,17 +370,14 @@
           <div class="eyebrow">Remaining today</div>
           <div class="rem-nums" style="margin-top:9px"><b>${rem.kcal}</b><span>kcal left</span></div>
         </div>
-        <div class="rem-chips">
-          <span class="rem-chip">P <b>${rem.p}g</b></span>
-          <span class="rem-chip">C <b>${rem.c}g</b></span>
-          <span class="rem-chip">F <b>${rem.f}g</b></span>
-          <span class="rem-chip">Fib <b>${rem.fib}g</b></span>
-          <span class="rem-chip goal">Per meal Â· <b>${g.perMeal.kcal} kcal</b> Â· P ${g.perMeal.p}g</span>
-        </div>
-        <div class="rem-note">${over
-          ? 'You are over your calorie target. Keep the next meal light and protein-led.'
-          : 'What\'s in my fridge? The chef ranks meals that close the gaps without blowing the target.'}</div>
-        <div class="rem-actions">
+         <div class="rem-bars">
+           ${bar('Protein', rem.p, g.protein, 'p', 'g')}
+           ${bar('Carbs', rem.c, g.carbs, 'c', 'g')}
+           ${bar('Fat', rem.f, g.fat, 'f', 'g')}
+           ${bar('Fibre', rem.fib, g.fibre, 'fib', 'g')}
+         </div>
+          <div class="rem-note"></div>
+         <div class="rem-actions">
           <button class="btn primary" id="chefBtn">${icon('spark')}Ask AI Chef</button>
           <button class="btn" data-water="500">${icon('drop')}Add 500 ml water</button>
         </div>`;
@@ -550,5 +547,9 @@
   });
   if (today) today.addEventListener('click', () => { foodDate = LOS.todayKey(); renderFood(); });
 })();
+
+
+
+
 
 

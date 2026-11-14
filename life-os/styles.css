@@ -887,3 +887,7 @@ html[data-compact="on"] .hero-metrics{gap:12px}
 .water-widget-copy{flex:1;min-width:0}
 .water-widget-copy .eyebrow{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
 .water-widget-copy b{font-family:var(--mono);font-size:16px;color:var(--accent)}
+
+.rem-bars{display:flex;flex-direction:column;gap:8px;margin:12px 0}
+.rem-bars .mbar{margin:0}
+.rem-bars .mbar-head b{font-size:11px}

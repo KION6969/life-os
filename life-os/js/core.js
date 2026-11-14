@@ -644,7 +644,7 @@ window.LOS = window.LOS || {};
         const isNext = !done && !isNow && !nextMarked && parseHM(s.start) > now;
         if (isNext) nextMarked = true;
         return `<div class="tl-item${done ? ' done' : ''}${isNow ? ' now' : ''}${isNext ? ' next' : ''}" data-type="${esc(s.type)}">
-          <div class="tl-time"><b>${fmtTime(s.start)}</b>${fmtTime(s.end)}</div>
+          <div class="tl-time"><b>${fmtTime(s.start)}</b><span>${fmtTime(s.end)}</span></div>
           <div class="tl-line"><span class="tl-dot"></span>
             <div style="min-width:0"><div class="tl-title">${esc(s.label)}</div></div>
           </div>
