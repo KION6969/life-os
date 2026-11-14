@@ -254,10 +254,28 @@
      ---------------------------------------------------------- */
   function renderMeasurements() {
     const box = document.getElementById('measureList');
-    if (!box) return;
-    const list = (LOS.db.measurements || []).slice().sort((a, b) => a.date < b.date ? -1 : 1);
-    if (!list.length) { box.innerHTML = ''; return; }
-    box.innerHTML = list.slice(-8).reverse().map((m) => `<div class="measure-row"><span class="mono muted">${esc(m.date)}</span><b>${m.waist || '—'} / ${m.chest || '—'} / ${m.arms || '—'} cm</b></div>`).join('');
+    if (box) {
+      const list = (LOS.db.measurements || []).slice().sort((a, b) => a.date < b.date ? -1 : 1);
+      if (!list.length) { box.innerHTML = ''; }
+      else box.innerHTML = list.slice(-8).reverse().map((m) => `<div class="measure-row"><span class="mono muted">${esc(m.date)}</span><b>${m.waist || '—'} / ${m.chest || '—'} / ${m.arms || '—'} cm</b></div>`).join('');
+    }
+    // chart
+    const svg = document.getElementById('measureChart');
+    if (!svg) return;
+    const list = (LOS.db.measurements || []).slice().sort((a, b) => a.date < b.date ? -1 : 1).filter((m) => m.waist);
+    if (list.length < 2) { svg.innerHTML = ''; return; }
+    const vals = list.map((m) => m.waist);
+    const min = Math.min(...vals), max = Math.max(...vals);
+    const range = Math.max(1, max - min);
+    const w = 300, h = 80, pad = 8;
+    const pts = vals.map((v, i) => {
+      const x = pad + (i / (vals.length - 1)) * (w - 2 * pad);
+      const y = h - pad - ((v - min) / range) * (h - 2 * pad);
+      return `${x.toFixed(1)},${y.toFixed(1)}`;
+    }).join(' ');
+    svg.innerHTML = `<polyline points="${pts}" /><circle cx="${pts.split(' ')[0].split(',')[0]}" cy="${pts.split(' ')[0].split(',')[1]}" r="3" />`;
+    const last = pts.split(' ').pop().split(',');
+    svg.innerHTML += `<circle cx="${last[0]}" cy="${last[1]}" r="4" />`;
   }
   function saveMeasurement() {
     const w = document.getElementById('mWaist');
@@ -371,6 +389,26 @@
 
   window.addEventListener('lifeos:installable', () => { syncInstall(); renderStorage(); });
   window.addEventListener('lifeos:installed', syncInstall);
+
+  function exportWeeklyCsv() {
+    const rows = ['date,kcal,protein,carbs,fat,fibre,water,workout,studyMin,score'];
+    for (let i = 6; i >= 0; i--) {
+      const k = LOS.addDays(LOS.todayKey(), -i);
+      const d = LOS.dayData(k);
+      const t = LOS.totalsFor(d);
+      const g = LOS.goalsFor();
+      rows.push([k, Math.round(t.kcal), Math.round(t.p), Math.round(t.c), Math.round(t.f), Math.round(t.fib), t.water.toFixed(2), d.workout ? d.workout.title : '', Math.round(d.studyMin || 0), LOS.scoreFor(k)].join(','));
+    }
+    const blob = new Blob([rows.join('\n')], { type: 'text/csv' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url; a.download = `life-os-week-${LOS.todayKey()}.csv`;
+    document.body.appendChild(a); a.click(); a.remove();
+    setTimeout(() => URL.revokeObjectURL(url), 1500);
+    LOS.toast('Weekly CSV exported', 'ok', 2200);
+  }
+  const exportCsvBtn = document.getElementById('exportCsvBtn');
+  if (exportCsvBtn) exportCsvBtn.addEventListener('click', exportWeeklyCsv);
 
   /* ----------------------------------------------------------
      CLOUD SYNC

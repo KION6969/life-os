@@ -157,6 +157,7 @@ window.LOS = window.LOS || {};
       days: {},
       measurements: [],
       weightHistory: [],
+      templates: {},
       gymPlans: {},
       gymHistory: [],
       studyTasks: DEFAULT_TASKS.map((t) => ({ ...t })),
@@ -191,6 +192,7 @@ window.LOS = window.LOS || {};
     out.days = out.days && typeof out.days === 'object' ? out.days : {};
     out.gymHistory = Array.isArray(out.gymHistory) ? out.gymHistory : [];
     out.gymPlans = (out.gymPlans && typeof out.gymPlans === 'object') ? out.gymPlans : {};
+    out.templates = (out.templates && typeof out.templates === 'object') ? out.templates : {};
     out.habitStreaks = (out.habitStreaks && typeof out.habitStreaks === 'object') ? out.habitStreaks : {};
     out.prefs.prs = out.prefs.prs || {};
     out.weightHistory = Array.isArray(out.weightHistory) ? out.weightHistory : [];
@@ -657,7 +659,7 @@ window.LOS = window.LOS || {};
     if (hw) {
       hw.innerHTML = habits.map((h) => `<div class="habit${h.done ? ' done' : ''}">
         <button class="habit-check" data-habit="${esc(h.id)}" aria-pressed="${h.done}" aria-label="${esc(h.label)}"><svg class="ic"><use href="#i-check"/></svg></button>
-        <div class="habit-copy"><b>${esc(h.label)}</b><span class="habit-sub">${esc(h.sub)}</span></div>
+        <div class="habit-copy"><b>${esc(h.label)}</b><span class="habit-sub">${esc(h.sub)}${(db.habitStreaks && db.habitStreaks[h.id] && db.habitStreaks[h.id].count > 1) ? ` · ${db.habitStreaks[h.id].count}d streak` : ""}</span></div>
       </div>`).join('');
     }
 
@@ -771,6 +773,8 @@ window.LOS = window.LOS || {};
   /* apply persisted theme on load */
   applyTheme();
 })();
+
+
 
 
 

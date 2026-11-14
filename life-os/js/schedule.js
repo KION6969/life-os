@@ -1,5 +1,5 @@
-/* ============================================================
-   LIFE OS — schedule: add, edit, delete and reset day blocks
+﻿/* ============================================================
+   LIFE OS â€” schedule: add, edit, delete and reset day blocks
    ============================================================ */
 (function () {
   'use strict';
@@ -32,7 +32,8 @@
       return;
     }
     box.innerHTML = sortBlocks(blocks).map((b) => `
-      <div class="sched-row" data-block="${esc(b.id)}">
+      <div class="sched-row" draggable="true" data-block="${esc(b.id)}">
+        <span class="drag-handle" aria-hidden="true">â‹®â‹®</span>
         <span class="sched-time">${LOS.fmtTime(b.start)}<em>${LOS.fmtTime(b.end)}</em></span>
         <span class="sched-copy"><b>${esc(b.label)}</b><small>${esc(typeLabel(b.type))}</small></span>
         <button class="icon-btn" data-edit-block="${esc(b.id)}" aria-label="Edit ${esc(b.label)}">${icon('chevron')}</button>
@@ -42,6 +43,7 @@
 
   function openSchedule() {
     renderList();
+    renderTemplateSelect();
     resetForm();
     LOS.openModal('scheduleModal');
   }
@@ -95,7 +97,7 @@
       LOS.toast(`Saved ${data.label}`, 'ok', 2000);
     } else {
       LOS.db.schedule.push({ id: LOS.uid(), label: data.label, start: data.start, end: data.end, type: data.type });
-      LOS.toast(`Added ${data.label} · ${LOS.fmtTime(data.start)}`, 'ok', 2200);
+      LOS.toast(`Added ${data.label} Â· ${LOS.fmtTime(data.start)}`, 'ok', 2200);
     }
 
     LOS.db.schedule = sortBlocks(LOS.db.schedule);
@@ -114,7 +116,7 @@
       if (LOS.currentPage === 'home') LOS.renderHome();
       renderList();
       resetForm();
-      if (!LOS.db.schedule.length) LOS.toast('Timetable is empty — add a block or reset the default', 'warn', 3800);
+      if (!LOS.db.schedule.length) LOS.toast('Timetable is empty â€” add a block or reset the default', 'warn', 3800);
       else LOS.toast(`${block.label} removed`, 'warn', 2000);
     });
   }
@@ -130,6 +132,38 @@
     });
   }
 
+  function renderTemplateSelect() {
+    const sel = document.getElementById('templateSelect');
+    if (!sel) return;
+    const names = Object.keys(LOS.db.templates || {});
+    sel.innerHTML = '<option value="">— apply template —</option>' + names.map((n) => `<option value="${esc(n)}">${esc(n)}</option>`).join('');
+  }
+
+  function saveTemplate() {
+    const name = (document.getElementById('templateName')?.value || '').trim().slice(0, 30);
+    if (!name) { LOS.toast('Enter a template name', 'warn'); return; }
+    if (!LOS.db.templates) LOS.db.templates = {};
+    LOS.db.templates[name] = LOS.db.schedule.map((b) => ({ ...b }));
+    LOS.save();
+    renderTemplateSelect();
+    LOS.toast(`Template "${name}" saved`, 'ok', 2200);
+    const inp = document.getElementById('templateName');
+    if (inp) inp.value = '';
+  }
+
+  function applyTemplate() {
+    const name = document.getElementById('templateSelect')?.value;
+    if (!name || !LOS.db.templates[name]) { LOS.toast('Pick a template', 'warn'); return; }
+    LOS.confirmAction('Apply template?', `Replace current timetable with "${name}"?`, 'Apply', () => {
+      LOS.db.schedule = LOS.db.templates[name].map((b) => ({ ...b, id: LOS.uid() }));
+      LOS.save();
+      if (LOS.currentPage === 'home') LOS.renderHome();
+      renderList();
+      renderTemplateSelect();
+      LOS.toast(`Applied "${name}"`, 'ok', 2200);
+    });
+  }
+
   /* ---------------- wiring ---------------- */
   const f = form();
   if (f) f.addEventListener('submit', saveBlock);
@@ -140,6 +174,12 @@
   const reset = document.getElementById('scheduleReset');
   if (reset) reset.addEventListener('click', resetSchedule);
 
+  const saveTpl = document.getElementById('saveTemplate');
+  if (saveTpl) saveTpl.addEventListener('click', saveTemplate);
+
+  const applyTpl = document.getElementById('applyTemplate');
+  if (applyTpl) applyTpl.addEventListener('click', applyTemplate);
+
   document.addEventListener('click', (e) => {
     if (e.target.closest('#editSchedule')) { openSchedule(); return; }
 
@@ -149,4 +189,46 @@
     const del = e.target.closest('[data-del-block]');
     if (del) { deleteBlock(del.dataset.delBlock); return; }
   });
+  /* drag to reorder */
+  let dragId = null;
+  const schedBox = document.getElementById('scheduleList');
+  if (schedBox) {
+    schedBox.addEventListener('dragstart', (e) => {
+      const row = e.target.closest('.sched-row');
+      if (!row) return;
+      dragId = row.dataset.block;
+      row.classList.add('dragging');
+      e.dataTransfer.effectAllowed = 'move';
+    });
+    schedBox.addEventListener('dragend', (e) => {
+      const row = e.target.closest('.sched-row');
+      if (row) row.classList.remove('dragging');
+      dragId = null;
+      renderList();
+    });
+    schedBox.addEventListener('dragover', (e) => {
+      e.preventDefault();
+      const row = e.target.closest('.sched-row');
+      if (row && dragId && row.dataset.block !== dragId) row.classList.add('drag-over');
+    });
+    schedBox.addEventListener('dragleave', (e) => {
+      const row = e.target.closest('.sched-row');
+      if (row) row.classList.remove('drag-over');
+    });
+    schedBox.addEventListener('drop', (e) => {
+      e.preventDefault();
+      const row = e.target.closest('.sched-row');
+      if (!row || !dragId || row.dataset.block === dragId) return;
+      row.classList.remove('drag-over');
+      const from = LOS.db.schedule.findIndex((b) => b.id === dragId);
+      const to = LOS.db.schedule.findIndex((b) => b.id === row.dataset.block);
+      if (from < 0 || to < 0) return;
+      const [moved] = LOS.db.schedule.splice(from, 1);
+      LOS.db.schedule.splice(to, 0, moved);
+      LOS.save();
+      if (LOS.currentPage === 'home') LOS.renderHome();
+      renderList();
+      LOS.toast('Reordered', 'ok', 1400);
+    });
+  }
 })();
