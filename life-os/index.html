@@ -125,6 +125,20 @@
         </div>
 
         <div class="stat-grid" id="homeStats"></div>
+        <div class="water-widget card">
+          <div class="water-glass" aria-hidden="true">
+            <div class="water-glass-fill" id="homeWaterFill" style="height:0%"></div>
+            <span class="water-glass-label" id="homeWaterLabel">0L</span>
+          </div>
+          <div class="water-widget-copy">
+            <div class="eyebrow">Hydration</div>
+            <b id="homeWaterText">0 / 0 L</b>
+            <div class="water-actions" style="margin-top:8px">
+              <button class="btn tiny" data-water="250">+250</button>
+              <button class="btn tiny" data-water="500">+500</button>
+            </div>
+          </div>
+        </div>
 
         <div class="home-cols">
           <div class="card">
@@ -196,6 +210,7 @@
             <p>Weekly split, set-by-set logging and a live session timer.</p>
           </div>
           <button class="btn primary" id="startWorkoutTop"><svg class="ic"><use href="#i-play"/></svg>Start workout</button>
+          <button class="btn" id="coachBtn"><svg class="ic"><use href="#i-spark"/></svg>AI Coach</button>
         </div>
         <div class="day-tabs" id="gymTabs" role="tablist" aria-label="Training day"></div>
         <div class="card workout-hero" id="workoutHero"></div>
@@ -619,6 +634,32 @@
       <div><kbd>Esc</kbd><span>Close modal / palette</span></div>
       <div><kbd>H</kbd><span>Show this help</span></div>
     </div>
+  </div>
+</div>
+
+<!-- ============================== GYM COACH ============================== -->
+<div class="modal-backdrop" id="coachModal" hidden>
+  <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="coachTitle">
+    <div class="modal-head">
+      <div><div class="eyebrow">AI Coach</div><h3 id="coachTitle">Build a workout</h3></div>
+      <button class="icon-btn" data-close aria-label="Close"><svg class="ic"><use href="#i-close"/></svg></button>
+    </div>
+    <form id="coachForm" class="form-grid" autocomplete="off">
+      <label class="field"><span>Equipment</span><select name="equip">
+        <option value="all">Full gym</option>
+        <option value="dumbbell">Dumbbells only</option>
+        <option value="bodyweight">Bodyweight only</option>
+      </select></label>
+      <label class="field"><span>Focus</span><select name="focus">
+        <option value="strength">Strength (heavy, low reps)</option>
+        <option value="hypertrophy" selected>Hypertrophy (moderate)</option>
+        <option value="endurance">Endurance (light, high reps)</option>
+      </select></label>
+      <div class="modal-actions span-2">
+        <button class="btn primary" type="submit"><svg class="ic"><use href="#i-spark"/></svg>Generate</button>
+      </div>
+    </form>
+    <div class="coach-list" id="coachList"></div>
   </div>
 </div>
 

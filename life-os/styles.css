@@ -881,3 +881,9 @@ html[data-compact="on"] .hero-metrics{gap:12px}
 .rest-float-label{font-size:9px;letter-spacing:.16em;text-transform:uppercase;color:var(--dim)}
 .rest-float b{font-size:18px;color:var(--accent)}
 .rest-float .icon-btn{width:24px;height:24px}
+
+.water-widget{display:flex;align-items:center;gap:16px;padding:16px 18px}
+.water-widget .water-glass{width:44px;height:72px}
+.water-widget-copy{flex:1;min-width:0}
+.water-widget-copy .eyebrow{font-size:9px;letter-spacing:.18em;text-transform:uppercase;color:var(--dim);margin-bottom:4px}
+.water-widget-copy b{font-family:var(--mono);font-size:16px;color:var(--accent)}

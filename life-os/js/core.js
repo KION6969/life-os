@@ -605,6 +605,12 @@ window.LOS = window.LOS || {};
 
     /* stats */
     const stats = document.getElementById('homeStats');
+    const hwf = document.getElementById('homeWaterFill');
+    const hwl = document.getElementById('homeWaterLabel');
+    const hwt = document.getElementById('homeWaterText');
+    if (hwf) hwf.style.height = Math.min(100, (t.water / Math.max(0.1, g.water)) * 100) + '%';
+    if (hwl) hwl.textContent = t.water.toFixed(1) + 'L';
+    if (hwt) hwt.textContent = t.water.toFixed(1) + ' / ' + g.water.toFixed(1) + ' L';
     if (stats) {
       const cards = [
         { icon: 'flame', label: 'Calories left', value: Math.max(0, Math.round(g.kcal - t.kcal)), unit: 'kcal', sub: `${Math.round(t.kcal)} of ${g.kcal} logged`, pct: (t.kcal / g.kcal) * 100 },

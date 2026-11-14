@@ -560,6 +560,59 @@
   }
 
   /* ----------------------------------------------------------
+     AI COACH
+     ---------------------------------------------------------- */
+  let coachItems = [];
+  function openCoach() {
+    const list = document.getElementById('coachList');
+    if (list) list.innerHTML = '';
+    LOS.openModal('coachModal');
+  }
+  function generateCoach(e) {
+    if (e) e.preventDefault();
+    const form = document.getElementById('coachForm');
+    if (!form) return;
+    const equip = form.elements.equip.value;
+    const focus = form.elements.focus.value;
+    const base = planOf(selected).exercises.slice();
+    const filtered = base.filter((ex) => {
+      const eq = equipOf(ex.name);
+      if (equip === 'dumbbell') return eq === 'dumbbell';
+      if (equip === 'bodyweight') return eq === 'bodyweight';
+      return true;
+    });
+    const setsMap = { strength: 5, hypertrophy: 3, endurance: 2 };
+    const repsMap = { strength: '4-6', hypertrophy: '8-12', endurance: '15-20' };
+    const restMap = { strength: 180, hypertrophy: 90, endurance: 45 };
+    coachItems = filtered.map((ex) => ({
+      name: ex.name,
+      sets: setsMap[focus],
+      reps: repsMap[focus],
+      rest: restMap[focus],
+      note: ex.note
+    }));
+    const list = document.getElementById('coachList');
+    if (list) {
+      if (!coachItems.length) { list.innerHTML = '<div class="empty" style="padding:18px 12px"><b>No exercises match</b><p>Try a different equipment filter.</p></div>'; return; }
+      list.innerHTML = coachItems.map((ex, i) => `
+        <div class="sched-row">
+          <span class="sched-time">${ex.sets}×<em>${ex.rest}s</em></span>
+          <span class="sched-copy"><b>${esc(ex.name)}</b><small>${ex.sets} sets · ${ex.reps} reps · ${ex.rest}s rest</small></span>
+        </div>`).join('') +
+        `<div class="modal-actions" style="margin-top:12px">
+          <button class="btn primary" id="coachStart"><svg class="ic"><use href="#i-play"/></svg>Start this workout</button>
+        </div>`;
+      const btn = document.getElementById('coachStart');
+      if (btn) btn.addEventListener('click', () => {
+        LOS.closeModal('coachModal');
+        // build a temporary plan
+        const tmpPlan = { ...planOf(selected), exercises: coachItems.map((e) => ({ name: e.name, sets: e.sets, reps: e.reps, rest: e.rest, note: e.note })) };
+        openSession(tmpPlan);
+      });
+    }
+  }
+
+  /* ----------------------------------------------------------
      WIRING
      ---------------------------------------------------------- */
   document.addEventListener('click', (e) => {
@@ -588,6 +641,8 @@
     if (jump) { selected = jump.dataset.gymDayJump; renderGym(); return; }
 
     if (e.target.closest('#startWorkoutTop')) { startSession(selected); return; }
+
+    if (e.target.closest('#coachBtn')) { openCoach(); return; }
 
     if (e.target.closest('#editGymPlan')) { openGymEdit(); return; }
 
@@ -637,6 +692,21 @@
       session.weights[i] = Number(w.value) || 0;
     }
   });
+
+  const coachForm = document.getElementById('coachForm');
+  if (coachForm) coachForm.addEventListener('submit', generateCoach);
+
+  const equipSel = document.getElementById('gymEquip');
+  if (equipSel) {
+    equipSel.value = equipFilter;
+    equipSel.addEventListener('change', () => {
+      equipFilter = equipSel.value;
+      LOS.db.prefs.gymEquip = equipFilter;
+      LOS.save();
+      openExercise = 0;
+      renderGym();
+    });
+  }
 
   window.addEventListener('beforeunload', (e) => {
     if (session && loggedSetCount() > 0) {
