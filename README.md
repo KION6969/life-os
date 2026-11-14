@@ -4,11 +4,12 @@ A local-first life dashboard: timetable, nutrition, training, study and targets,
 
 ## Deploy to Vercel
 
-1. Install the Vercel CLI: `npm i -g vercel`
-2. From the project root: `vercel` (first run links the project; subsequent runs deploy).
-3. Or connect this repo in the Vercel dashboard — Vercel will serve the `life-os/` folder. Set the **Root Directory** to `life-os` (or move its contents to the repo root).
+Live at: **https://life-os-static.vercel.app**
 
-The app is 100% client-side: all data lives in the visitor's `localStorage`. There is no server to run.
+To redeploy:
+1. Install the Vercel CLI: `npm i -g vercel`
+2. From the `life-os/` folder: `vercel --prod --yes`
+3. Or connect this repo in the Vercel dashboard — set the Root Directory to `life-os`.
 
 ## Run locally
 
