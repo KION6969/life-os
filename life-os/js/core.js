@@ -244,9 +244,9 @@ window.LOS = window.LOS || {};
 
     const bmr = 10 * w + 6.25 * h - 5 * age + (sex === 'male' ? 5 : -161);
     const tdee = bmr * activity;
-    const offset = goal === 'cut' ? -500 : goal === 'recomp' ? -350 : goal === 'bulk' ? 300 : 0;
+    const offset = goal === 'cut' ? -500 : goal === 'recomp' ? -250 : goal === 'bulk' ? 300 : 0;
     const kcal = Math.round((tdee + offset) / 10) * 10;
-    const proteinPerKg = Number(p.proteinPerKg) || (goal === 'cut' ? 2.2 : goal === 'bulk' ? 1.8 : 2.0);
+    const proteinPerKg = Number(p.proteinPerKg) || (goal === 'cut' ? 2.2 : goal === 'bulk' ? 1.8 : goal === 'recomp' ? 2.0 : 1.6);
     const fatPerKg = Number(p.fatPerKg) || 0.85;
     const meals = clamp(Math.round(Number(p.meals) || 4), 2, 6);
     const protein = Math.round(w * proteinPerKg);
@@ -771,6 +771,7 @@ window.LOS = window.LOS || {};
   /* apply persisted theme on load */
   applyTheme();
 })();
+
 
 
 

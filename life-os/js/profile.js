@@ -8,10 +8,10 @@
 
   const GOAL_LABELS = { cut: 'Cut', recomp: 'Recomp', maintain: 'Maintain', bulk: 'Bulk' };
   const GOAL_NOTES = {
-    cut: 'A 500 kcal deficit. Protein high, steps up.',
-    recomp: 'A small deficit with high protein â€” lose fat, hold muscle.',
+    cut: 'A 500 kcal deficit (~0.45 kg fat/week). Protein 2.2 g/kg to preserve muscle (ACSM/ISSN).',
+    recomp: 'A small 250 kcal deficit with high protein (2.0 g/kg) + resistance training (body recomposition research).',
     maintain: 'Eat at maintenance. Performance and recovery first.',
-    bulk: 'A 300 kcal surplus. Progressive overload, sleep 8h.'
+    bulk: 'A 300 kcal surplus (lean bulk, ~0.25-0.5 kg/wk). Protein 1.8 g/kg (ISSN bodybuilding review).'
   };
 
   /* ----------------------------------------------------------

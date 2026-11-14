@@ -1,9 +1,9 @@
-/* ============================================================
-   LIFE OS — service worker
+﻿/* ============================================================
+   LIFE OS â€” service worker
    App shell is cached for offline use; the AI Chef proxy is
    always network-only so it never serves a stale suggestion.
    ============================================================ */
-const VERSION = 'lifeos-v1.3.22';
+const VERSION = 'lifeos-v1.3.23';
 const SHELL = [
   './',
   './index.html',
@@ -85,3 +85,4 @@ self.addEventListener('fetch', (event) => {
 self.addEventListener('message', (event) => {
   if (event.data === 'skip-waiting') self.skipWaiting();
 });
+
