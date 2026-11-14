@@ -290,9 +290,9 @@ window.LOS = window.LOS || {};
     const g = goalsFor();
     const studyMin = Number(day.studyMin) || 0;
     return [
-      { id: 'water', label: 'Hydration goal', sub: `${t.water.toFixed(1)} / ${g.water.toFixed(1)} L`, done: t.water >= g.water * 0.99 },
-      { id: 'protein', label: 'Protein target', sub: `${Math.round(t.p)} / ${g.protein} g`, done: t.p >= g.protein * 0.95 },
-      { id: 'study', label: 'Deep study', sub: `${Math.round(studyMin)} / 120 min`, done: studyMin >= 120 },
+      { id: 'water', label: 'Hydration goal', sub: `${t.water.toFixed(1)} / ${g.water.toFixed(1)} L` + ((db.habitStreaks && db.habitStreaks.water && db.habitStreaks.water.count > 1) ? ` · ${db.habitStreaks.water.count}d` : ``), done: t.water >= g.water * 0.99 },
+      { id: 'protein', label: 'Protein target', sub: `${Math.round(t.p)} / ${g.protein} g` + ((db.habitStreaks && db.habitStreaks.protein && db.habitStreaks.protein.count > 1) ? ` · ${db.habitStreaks.protein.count}d` : ``), done: t.p >= g.protein * 0.95 },
+      { id: 'study', label: 'Deep study', sub: `${Math.round(studyMin)} / 120 min` + ((db.habitStreaks && db.habitStreaks.study && db.habitStreaks.study.count > 1) ? ` · ${db.habitStreaks.study.count}d` : ``), done: studyMin >= 120 },
       { id: 'workout', label: 'Training', sub: day.workout ? day.workout.title : 'Not logged yet', done: !!day.workout },
       { id: 'sleep', label: 'Screens off by 22:00', sub: 'Evening discipline â€” tap to mark', done: !!(day.habits && day.habits.sleep), manual: true }
     ];
@@ -773,6 +773,10 @@ window.LOS = window.LOS || {};
   /* apply persisted theme on load */
   applyTheme();
 })();
+
+
+
+
 
 
 
