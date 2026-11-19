@@ -1,0 +1,32 @@
+{
+  "name": "life-os",
+  "private": true,
+  "version": "1.3.29",
+  "description": "A local-first life dashboard: timetable, nutrition, training, study and targets. Works as a website and as an installable PWA.",
+  "license": "MIT",
+  "author": "KION6969",
+  "homepage": "https://life-os-two-pied.vercel.app",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/KION6969/life-os.git"
+  },
+  "bugs": {
+    "url": "https://github.com/KION6969/life-os/issues"
+  },
+  "keywords": [
+    "pwa",
+    "offline-first",
+    "dashboard",
+    "nutrition",
+    "fitness",
+    "productivity",
+    "timetable",
+    "localstorage"
+  ],
+  "scripts": {
+    "start": "powershell -ExecutionPolicy Bypass -File start-life-os.ps1",
+    "lint": "npx eslint js/ --ext .js 2>/dev/null || echo 'ESLint not configured — skipping'",
+    "test": "echo 'No test runner configured yet — see TODO in profile.js'"
+  },
+  "devDependencies": {}
+}

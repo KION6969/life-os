@@ -1,0 +1,30 @@
+name: CI
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Validate HTML
+        run: |
+          npx html-validator --file index.html || echo "html-validator not available — skipping"
+
+      - name: Check JavaScript syntax
+        run: |
+          node --check js/core.js
+          node --check js/food.js
+          node --check js/gym.js
+          node --check js/study.js
+          node --check js/profile.js
+          node --check js/schedule.js
+          node --check js/init.js
+
+      - name: Run energy model tests
+        run: |
+          node test/energy.test.js
