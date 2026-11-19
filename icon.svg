@@ -1,0 +1,36 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 512 512" width="512" height="512">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#08111a"/>
+      <stop offset="1" stop-color="#04070b"/>
+    </linearGradient>
+    <linearGradient id="mint" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#7dffcb"/>
+      <stop offset=".55" stop-color="#00ffa3"/>
+      <stop offset="1" stop-color="#22d3ee"/>
+    </linearGradient>
+    <filter id="glow" x="-50%" y="-50%" width="200%" height="200%">
+      <feGaussianBlur stdDeviation="10" result="b"/>
+      <feMerge><feMergeNode in="b"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <radialGradient id="halo" cx=".5" cy=".42" r=".6">
+      <stop offset="0" stop-color="#00ffa3" stop-opacity=".22"/>
+      <stop offset="1" stop-color="#00ffa3" stop-opacity="0"/>
+    </radialGradient>
+  </defs>
+
+  <rect width="512" height="512" rx="112" fill="url(#bg)"/>
+  <rect width="512" height="512" rx="112" fill="url(#halo)"/>
+
+  <g opacity=".16" stroke="#7dffcb" stroke-width="1">
+    <path d="M0 128h512M0 256h512M0 384h512M128 0v512M256 0v512M384 0v512"/>
+  </g>
+
+  <g fill="none" stroke="url(#mint)" stroke-linejoin="round" filter="url(#glow)">
+    <path d="M256 78 402 160v176l-146 82-146-82V160Z" stroke-width="7" opacity=".5"/>
+    <path d="M186 190v132h74" stroke-width="26" stroke-linecap="round"/>
+  </g>
+
+  <circle cx="272" cy="330" r="15" fill="#00ffa3" filter="url(#glow)"/>
+  <text x="256" y="452" text-anchor="middle" font-family="Segoe UI, Arial, sans-serif" font-size="34" font-weight="700" letter-spacing="14" fill="#7dffcb" opacity=".75">LIFE OS</text>
+</svg>

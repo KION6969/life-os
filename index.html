@@ -1,0 +1,735 @@
+﻿<!DOCTYPE html>
+<html lang="en" data-theme="mint" data-motion="on">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Life OS — Focus · Progress</title>
+<meta name="description" content="A calm cyber operating system for your day: timetable, nutrition, training, study and targets. Local-first and offline-ready.">
+<meta name="author" content="KION6969">
+<meta name="color-scheme" content="dark">
+<meta name="theme-color" content="#04070b">
+<link rel="canonical" href="https://life-os-two-pied.vercel.app/">
+<meta property="og:type" content="website">
+<meta property="og:site_name" content="Life OS">
+<meta property="og:title" content="Life OS — Focus · Progress">
+<meta property="og:description" content="A local-first dashboard for your timetable, nutrition, training and study. No account, no backend, works offline.">
+<meta property="og:url" content="https://life-os-two-pied.vercel.app/">
+<meta property="og:image" content="https://life-os-two-pied.vercel.app/docs/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="Life OS — Focus · Progress">
+<meta name="twitter:description" content="A local-first dashboard for your timetable, nutrition, training and study.">
+<meta name="twitter:image" content="https://life-os-two-pied.vercel.app/docs/og.png">
+<link rel="manifest" href="./manifest.webmanifest">
+<link rel="icon" href="./icon.svg" type="image/svg+xml">
+<link rel="apple-touch-icon" href="./icon-192.png">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;600;700&family=JetBrains+Mono:wght@400;500;700&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="./styles.css">
+</head>
+<body data-page="home">
+
+<svg class="sprite" aria-hidden="true"><defs>
+  <symbol id="i-home" viewBox="0 0 24 24"><path d="M3 10.6 12 3l9 7.6"/><path d="M5.2 9.4V21h13.6V9.4"/><path d="M9.6 21v-5.8h4.8V21"/></symbol>
+  <symbol id="i-food" viewBox="0 0 24 24"><path d="M3.2 11h17.6a8.8 8.8 0 0 1-17.6 0Z"/><path d="M7 7.2c0-1.5 1-2 1-3.4M12 7.2c0-1.5 1-2 1-3.4M17 7.2c0-1.5 1-2 1-3.4"/></symbol>
+  <symbol id="i-gym" viewBox="0 0 24 24"><path d="M6.4 6.2v11.6M3.4 8.2v7.6M17.6 6.2v11.6M20.6 8.2v7.6M6.4 12h11.2"/></symbol>
+  <symbol id="i-study" viewBox="0 0 24 24"><path d="M4 5.6A2.6 2.6 0 0 1 6.6 3H20v16.2H6.6A2.6 2.6 0 0 0 4 21.8Z"/><path d="M4 19.2a2.6 2.6 0 0 1 2.6-2.6H20"/><path d="M8 7.5h8"/></symbol>
+  <symbol id="i-user" viewBox="0 0 24 24"><circle cx="12" cy="8" r="3.6"/><path d="M4.6 20.4a7.4 7.4 0 0 1 14.8 0"/></symbol>
+  <symbol id="i-flame" viewBox="0 0 24 24"><path d="M12 3c3 4 6 5.4 6 9.2a6 6 0 1 1-12 0c0-2.2 1.1-3.7 2.6-5.2.5 1.6 1.3 2.2 2.1 2.2 1.4-2 1.3-4 1.3-6.2Z"/></symbol>
+  <symbol id="i-clock" viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M12 7.2V12l3.4 2"/></symbol>
+  <symbol id="i-plus" viewBox="0 0 24 24"><path d="M12 5v14M5 12h14"/></symbol>
+  <symbol id="i-play" viewBox="0 0 24 24"><path d="M8 5.2v13.6L19 12Z"/></symbol>
+  <symbol id="i-pause" viewBox="0 0 24 24"><path d="M9 5v14M15 5v14"/></symbol>
+  <symbol id="i-reset" viewBox="0 0 24 24"><path d="M4.5 4.5v5.2h5.2"/><path d="M4.9 9.7a8 8 0 1 1-1 4.1"/></symbol>
+  <symbol id="i-check" viewBox="0 0 24 24"><path d="M5 12.8l4.2 4.2L19 6.6"/></symbol>
+  <symbol id="i-close" viewBox="0 0 24 24"><path d="M6 6l12 12M18 6L6 18"/></symbol>
+  <symbol id="i-chevron" viewBox="0 0 24 24"><path d="M9 6l6 6-6 6"/></symbol>
+  <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2 4.2 14H10l-1 8 9-12h-5.8Z"/></symbol>
+  <symbol id="i-drop" viewBox="0 0 24 24"><path d="M12 3s6.2 6.6 6.2 10.2a6.2 6.2 0 0 1-12.4 0C5.8 9.6 12 3 12 3Z"/></symbol>
+  <symbol id="i-chart" viewBox="0 0 24 24"><path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/></symbol>
+  <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3v12M7 10l5 5 5-5M4 21h16"/></symbol>
+  <symbol id="i-upload" viewBox="0 0 24 24"><path d="M12 21V9M7 14l5-5 5 5M4 3h16"/></symbol>
+  <symbol id="i-install" viewBox="0 0 24 24"><path d="M12 3v10M8 9l4 4 4-4"/><path d="M5 16v3.2A1.8 1.8 0 0 0 6.8 21h10.4a1.8 1.8 0 0 0 1.8-1.8V16"/></symbol>
+  <symbol id="i-palette" viewBox="0 0 24 24"><path d="M12 3a9 9 0 0 0 0 18c1.6 0 2.3-1 2.3-2 0-1.4-1.2-1.8-1.2-3 0-1.1.9-2 2-2H17a4 4 0 0 0 4-4c0-4-4.4-7-9-7Z"/><circle cx="7.6" cy="10" r=".9" fill="currentColor" stroke="none"/><circle cx="10.4" cy="6.8" r=".9" fill="currentColor" stroke="none"/><circle cx="14.8" cy="7.2" r=".9" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-search" viewBox="0 0 24 24"><circle cx="10.8" cy="10.8" r="6.8"/><path d="M15.8 15.8 21 21"/></symbol>
+  <symbol id="i-trash" viewBox="0 0 24 24"><path d="M4 7h16M9.5 7V4.2h5V7M6.6 7l.9 13h9l.9-13"/><path d="M10 11v5M14 11v5"/></symbol>
+  <symbol id="i-spark" viewBox="0 0 24 24"><path d="M12 2.6l1.9 5.5L19.4 10l-5.5 1.9L12 17.4l-1.9-5.5L4.6 10l5.5-1.9Z"/><path d="M18.6 15.8l.8 2.2 2.2.8-2.2.8-.8 2.2-.8-2.2-2.2-.8 2.2-.8Z"/></symbol>
+  <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M4 12h15M13.5 6.5 20 12l-6.5 5.5"/></symbol>
+  <symbol id="i-target" viewBox="0 0 24 24"><circle cx="12" cy="12" r="8.4"/><circle cx="12" cy="12" r="4.2"/><circle cx="12" cy="12" r=".8" fill="currentColor" stroke="none"/></symbol>
+  <symbol id="i-moon" viewBox="0 0 24 24"><path d="M20.4 14.6A8.6 8.6 0 0 1 9.4 3.6a8.6 8.6 0 1 0 11 11Z"/></symbol>
+  <symbol id="i-calendar" viewBox="0 0 24 24"><rect x="3.4" y="5.2" width="17.2" height="15.4" rx="2.4"/><path d="M8 3v4.2M16 3v4.2M3.4 10.2h17.2"/></symbol>
+  <symbol id="i-menu" viewBox="0 0 24 24"><path d="M4 7h16M4 12h16M4 17h16"/></symbol>
+</defs></svg>
+
+<div class="bg-grid" aria-hidden="true"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
+<div class="scan" aria-hidden="true"></div>
+<div class="glow g1" aria-hidden="true"></div>
+<div class="glow g2" aria-hidden="true"></div>
+
+<div id="boot" role="status" aria-live="polite">
+  <div class="boot-mark"><span></span></div>
+  <div class="boot-name">LIFE<span>OS</span></div>
+  <div class="boot-line"><i></i></div>
+  <div class="boot-sub">mounting your day…</div>
+</div>
+
+<div class="app">
+  <aside class="rail">
+    <a class="logo" href="#home" aria-label="Life OS home">
+      <svg viewBox="0 0 32 32" aria-hidden="true"><path d="M16 2.5 27.7 9v14L16 29.5 4.3 23V9Z" fill="none" stroke="currentColor" stroke-width="1.4"/><path d="M16 8.4v10.2h6.4" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"/><circle cx="16" cy="23.2" r="1.5" fill="currentColor"/></svg>
+    </a>
+    <nav class="rail-nav" aria-label="Primary">
+      <button class="nav-btn" data-nav="home" data-label="Home" aria-label="Home"><svg class="ic"><use href="#i-home"/></svg></button>
+      <button class="nav-btn" data-nav="food" data-label="Food" aria-label="Food"><svg class="ic"><use href="#i-food"/></svg></button>
+      <button class="nav-btn" data-nav="gym" data-label="Gym" aria-label="Gym"><svg class="ic"><use href="#i-gym"/></svg></button>
+      <button class="nav-btn" data-nav="study" data-label="Study" aria-label="Study"><svg class="ic"><use href="#i-study"/></svg></button>
+      <button class="nav-btn" data-nav="profile" data-label="Profile" aria-label="Profile"><svg class="ic"><use href="#i-user"/></svg></button>
+    </nav>
+    <div class="rail-foot">
+      <button class="nav-btn ghost" id="themeBtn" data-label="Theme" aria-label="Cycle accent colour"><svg class="ic"><use href="#i-palette"/></svg></button>
+      <button class="nav-btn ghost" id="installBtn" data-label="Install app" aria-label="Install app" hidden><svg class="ic"><use href="#i-install"/></svg></button>
+    </div>
+  </aside>
+
+  <div class="shell">
+    <header class="topbar">
+      <div class="crumb">
+        <span class="live-dot" aria-hidden="true"></span>
+        <span class="crumb-name">LIFE OS</span>
+        <span class="crumb-sep">/</span>
+        <span id="crumbPage">Home</span>
+      </div>
+      <div class="top-actions">
+        <span class="chip mono" id="clock">--:--:--</span>
+        <span class="chip streak" title="Current streak"><svg class="ic"><use href="#i-flame"/></svg><b id="topStreak">0</b><span>day streak</span></span>
+        <button class="icon-btn" id="paletteBtn" aria-label="Open command palette" title="Command palette (Ctrl K)"><svg class="ic"><use href="#i-search"/></svg><kbd>K</kbd></button>
+      </div>
+    </header>
+
+    <main id="main">
+
+      <!-- ============================== HOME ============================== -->
+      <section class="page" data-page="home">
+        <div class="home-hero">
+          <div class="card hero">
+            <div class="hero-grid">
+              <div class="hero-copy">
+                <div class="eyebrow" id="heroDate">—</div>
+                <h1 id="heroGreeting">Good evening, <span id="heroName">Life OS</span></h1>
+                <p class="hero-line" id="heroLine">—</p>
+                <div class="hero-actions">
+                  <button class="btn primary" data-quick="meal"><svg class="ic"><use href="#i-plus"/></svg>Log meal</button>
+                  <button class="btn" data-quick="focus"><svg class="ic"><use href="#i-play"/></svg>Focus 25</button>
+                  <button class="btn" data-quick="water"><svg class="ic"><use href="#i-drop"/></svg>Water +250</button>
+                </div>
+              </div>
+              <div class="score-wrap">
+                <svg class="ring score-ring" viewBox="0 0 120 120" aria-hidden="true">
+                  <circle class="ring-bg" cx="60" cy="60" r="52"/>
+                  <circle class="ring-fg" id="scoreRing" cx="60" cy="60" r="52"/>
+                </svg>
+                <div class="score-label"><b id="scoreVal">0</b><span>daily score</span></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="card next-card" id="nextCard"></div>
+        </div>
+
+        <div class="stat-grid" id="homeStats"></div>
+        <div class="water-widget card">
+          <div class="water-glass" aria-hidden="true">
+            <div class="water-glass-fill" id="homeWaterFill" style="height:0%"></div>
+            <span class="water-glass-label" id="homeWaterLabel">0L</span>
+          </div>
+          <div class="water-widget-copy">
+            <div class="eyebrow">Hydration</div>
+            <b id="homeWaterText">0 / 0 L</b>
+            <div class="water-actions" style="margin-top:8px">
+              <button class="btn tiny" data-water="250">+250</button>
+              <button class="btn tiny" data-water="500">+500</button>
+            </div>
+          </div>
+        </div>
+
+        <div class="home-cols">
+          <div class="card">
+            <div class="card-head">
+              <h2>Today's protocol</h2>
+              <div class="head-inline">
+                <span class="mono muted" id="timelineMeta">—</span>
+                <button class="btn tiny" id="editSchedule"><svg class="ic"><use href="#i-calendar"/></svg>Edit</button>
+              </div>
+            </div>
+            <div class="timeline" id="timeline"></div>
+          </div>
+          <div class="stack">
+            <div class="card">
+              <div class="card-head"><h2>Habits</h2><span class="mono muted" id="habitMeta">—</span></div>
+              <div class="habits" id="habits"></div>
+            </div>
+            <div class="card">
+              <div class="card-head"><h2>Momentum</h2><span class="mono muted">7 days</span></div>
+              <div class="chart" id="momentum"></div>
+            </div>
+            <div class="card">
+              <div class="card-head"><h2>Tip of the day</h2><span class="mono muted" id="tipTag">—</span></div>
+              <p class="tip-text" id="tipText">—</p>
+            </div>
+            <div class="card">
+              <div class="card-head"><h2>Weekly review</h2><span class="mono muted">7-day avg</span></div>
+              <div class="mini-grid" id="weekReview"></div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================== FOOD ============================== -->
+      <section class="page" data-page="food">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Fuel</div>
+            <h1>Nutrition</h1>
+            <p>Macros, meals and hydration — logged against your live targets.</p>
+          </div>
+          <div class="head-actions">
+            <span class="chip mono" id="foodDateLabel">Today</span>
+            <div class="date-nav">
+              <button class="icon-btn" id="foodPrev" aria-label="Previous day"><svg class="ic flip"><use href="#i-chevron"/></svg></button>
+              <button class="btn tiny" id="foodToday">Today</button>
+              <button class="icon-btn" id="foodNext" aria-label="Next day"><svg class="ic"><use href="#i-chevron"/></svg></button>
+            </div>
+            <button class="btn primary" id="addMealBtn"><svg class="ic"><use href="#i-plus"/></svg>Log meal</button>
+          </div>
+        </div>
+        <div class="food-grid">
+          <div class="card macro-card" id="macroCard"></div>
+          <div class="card remaining-card" id="remaining"></div>
+        </div>
+        <div class="card meals-card">
+          <div class="card-head"><h2>Meals</h2><span class="mono muted" id="mealTotal">—</span></div>
+          <div id="favs" hidden></div>
+          <div id="meals"></div>
+        </div>
+      </section>
+
+      <!-- ============================== GYM ============================== -->
+      <section class="page" data-page="gym">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Train</div>
+            <h1>Gym</h1>
+            <p>Weekly split, set-by-set logging and a live session timer.</p>
+          </div>
+          <button class="btn primary" id="startWorkoutTop"><svg class="ic"><use href="#i-play"/></svg>Start workout</button>
+          <button class="btn" id="coachBtn"><svg class="ic"><use href="#i-spark"/></svg>AI Coach</button>
+        </div>
+        <div class="day-tabs" id="gymTabs" role="tablist" aria-label="Training day"></div>
+        <div class="card workout-hero" id="workoutHero"></div>
+        <div class="card">
+          <div class="card-head">
+            <h2>Planned exercises</h2>
+            <div class="head-inline">
+              <span class="mono muted" id="exCount">—</span>
+              <select id="gymEquip" class="tiny-select" aria-label="Equipment filter">
+                <option value="all">All equipment</option>
+                <option value="dumbbell">Dumbbells only</option>
+                <option value="bodyweight">No equipment (bodyweight)</option>
+                <option value="gym">Gym equipment</option>
+              </select>
+              <button class="btn tiny" id="editGymPlan"><svg class="ic"><use href="#i-calendar"/></svg>Edit</button>
+            </div>
+          </div>
+          <div class="exercise-list" id="exercises"></div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-head"><h2>This week</h2><span class="mono muted">7 days</span></div>
+            <div class="mini-grid" id="gymStats"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h2>Recent sessions</h2><span class="mono muted">log</span></div>
+            <div class="history" id="gymHistory"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================== STUDY ============================== -->
+      <section class="page" data-page="study">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Focus</div>
+            <h1>Study</h1>
+            <p>Deep work timer, task queue and a live picture of your week.</p>
+          </div>
+          <button class="btn" id="studyJump"><svg class="ic"><use href="#i-clock"/></svg>Jump to next block</button>
+        </div>
+        <div class="study-grid">
+          <div class="card focus-card" id="focusCard"></div>
+          <div class="card tasks-card">
+            <div class="card-head"><h2>Study queue</h2><span class="mono muted" id="taskMeta">—</span></div>
+            <form class="inline-form" id="taskForm" autocomplete="off">
+              <input id="taskInput" maxlength="120" placeholder="Add a task…" aria-label="New task">
+              <button class="icon-btn solid" aria-label="Add task"><svg class="ic"><use href="#i-plus"/></svg></button>
+            </form>
+            <div class="tasks" id="tasks"></div>
+          </div>
+        </div>
+        <div class="grid-2">
+          <div class="card">
+            <div class="card-head"><h2>Last 7 days</h2><span class="mono muted">minutes</span></div>
+            <div class="chart" id="studyChart"></div>
+          </div>
+          <div class="card">
+            <div class="card-head"><h2>Study stats</h2><span class="mono muted">all time</span></div>
+            <div class="mini-grid" id="studyStats"></div>
+          </div>
+        </div>
+      </section>
+
+      <!-- ============================== PROFILE ============================== -->
+      <section class="page" data-page="profile">
+        <div class="page-head">
+          <div>
+            <div class="eyebrow">Identity</div>
+            <h1>Profile</h1>
+            <p>Your metrics drive every target in the system.</p>
+          </div>
+          <div class="head-actions">
+            <span class="chip mono" id="profileMember">MEMBER</span>
+            <button class="btn" id="exportBtn"><svg class="ic"><use href="#i-download"/></svg>Export</button>
+            <button class="btn" id="importBtn"><svg class="ic"><use href="#i-upload"/></svg>Import</button>
+            <input type="file" id="importFile" accept="application/json" hidden>
+  <input type="file" id="csvFile" accept=".csv,text/csv" hidden>
+          </div>
+        </div>
+
+        <div class="profile-grid">
+          <div class="card identity-card">
+            <div class="avatar" id="avatar">L</div>
+            <div class="identity-meta">
+              <div class="eyebrow">Operator</div>
+              <h2 id="identityName">Life OS User</h2>
+              <p class="muted" id="identitySub">20 · Male · 183 cm</p>
+              <div class="badge-row">
+                <span class="badge"><svg class="ic"><use href="#i-flame"/></svg><b id="streakBadge">0</b> day streak</span>
+                <span class="badge"><svg class="ic"><use href="#i-target"/></svg><b id="goalBadge">Recomp</b></span>
+              </div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h2>Metrics</h2><span class="mono muted">drives targets</span></div>
+            <form class="form-grid" id="profileForm" autocomplete="off">
+              <label class="field span-2"><span>Name</span><input name="name" maxlength="40" required></label>
+              <label class="field"><span>Age</span><input name="age" type="number" min="13" max="100" required></label>
+              <label class="field"><span>Sex</span><select name="sex"><option value="male">Male</option><option value="female">Female</option></select></label>
+              <label class="field"><span>Height (cm)</span><input name="height" type="number" min="120" max="230" required></label>
+              <label class="field"><span>Weight (kg)</span><input name="weight" type="number" min="35" max="250" step="0.1" required></label>
+              <label class="field"><span>Activity</span><select name="activity">
+                <option value="1.2">Sedentary</option>
+                <option value="1.375">Light</option>
+                <option value="1.55">Moderate</option>
+                <option value="1.725">High</option>
+                <option value="1.9">Athlete</option>
+              </select></label>
+              <label class="field"><span>Goal</span><select name="goal">
+                <option value="cut">Cut</option>
+                <option value="recomp">Body recomp</option>
+                <option value="maintain">Maintain</option>
+                <option value="bulk">Bulk</option>
+              </select></label>
+              <label class="field"><span>Diet</span><select name="diet">
+                <option value="omnivore">Omnivore</option>
+                <option value="vegetarian">Vegetarian</option>
+                <option value="eggetarian">Vegetarian + eggs</option>
+                <option value="vegan">Vegan</option>
+                <option value="pescatarian">Pescatarian</option>
+              </select></label>
+              <label class="field"><span>Cuisine</span><select name="cuisine">
+                <option value="any">Any</option>
+                <option value="indian">Indian</option>
+                <option value="asian">Asian</option>
+                <option value="mediterranean">Mediterranean</option>
+                <option value="western">Western</option>
+                <option value="high-protein">High-protein / gym</option>
+              </select></label>
+              <label class="field"><span>Protein g/kg</span><input name="proteinPerKg" type="number" min="1.2" max="3" step="0.1"></label>
+              <label class="field"><span>Fat g/kg</span><input name="fatPerKg" type="number" min="0.5" max="1.5" step="0.1"></label>
+              <label class="field"><span>Meals / day</span><select name="meals">
+                <option value="2">2</option>
+                <option value="3">3</option>
+                <option value="4">4</option>
+                <option value="5">5</option>
+                <option value="6">6</option>
+              </select></label>
+              <div class="form-note span-2">Targets update instantly across Food, Home and Study. Protein and fat scale with your weight.</div>
+            </form>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h2>Energy model</h2><span class="mono muted">Mifflin–St Jeor</span></div>
+            <div class="energy-grid">
+              <div class="energy-stat"><span>BMR</span><b id="bmrVal">0</b><em>kcal / day</em></div>
+              <div class="energy-stat"><span>TDEE</span><b id="tdeeVal">0</b><em>kcal / day</em></div>
+              <div class="energy-stat wide"><span>Calorie target</span><b id="kcalTarget">0</b><em>kcal / day</em></div>
+            </div>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h2>Measurements</h2><span class="mono muted">body log</span></div>
+            <div class="form-grid">
+              <label class="field"><span>Waist (cm)</span><input id="mWaist" type="number" min="40" max="200" step="0.1"></label>
+              <label class="field"><span>Chest (cm)</span><input id="mChest" type="number" min="40" max="200" step="0.1"></label>
+              <label class="field"><span>Arms (cm)</span><input id="mArms" type="number" min="15" max="80" step="0.1"></label>
+              <label class="field"><span>Date</span><input id="mDate" type="date"></label>
+            </div>
+            <div class="modal-actions" style="margin-top:10px">
+              <button class="btn primary" id="saveMeasurement"><svg class="ic"><use href="#i-check"/></svg>Log measurement</button>
+            </div>
+            <div class="measure-list" id="measureList"></div>
+            <svg class="measure-chart" id="measureChart" viewBox="0 0 300 80" preserveAspectRatio="none"></svg>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h2>Appearance</h2><span class="mono muted">system</span></div>
+            <div class="label">Accent</div>
+            <div class="accent-row" id="accentRow">
+              <button class="accent" data-accent="mint" aria-label="Mint" style="--sw:#00ffa3"></button>
+              <button class="accent" data-accent="cyan" aria-label="Cyan" style="--sw:#22d3ee"></button>
+              <button class="accent" data-accent="violet" aria-label="Violet" style="--sw:#a78bfa"></button>
+              <button class="accent" data-accent="amber" aria-label="Amber" style="--sw:#ffb020"></button>
+            </div>
+            <div class="label">Motion</div>
+            <button class="toggle" id="motionToggle" aria-pressed="true">
+              <span>Ambient motion<small>Particles, glows and transitions</small></span>
+              <span class="track"><span class="knob"></span></span>
+            </button>
+            <div class="label">Theme</div>
+            <button class="toggle" id="themeModeToggle" aria-pressed="false">
+              <span>Light mode<small>Switch between dark and light</small></span>
+              <span class="track"><span class="knob"></span></span>
+            </button>
+            <div class="label">Notifications</div>
+            <button class="toggle" id="notifToggle" aria-pressed="false">
+              <span>Block reminders<small>Notify before each timetable block</small></span>
+              <span class="track"><span class="knob"></span></span>
+            </button>
+            <div class="label">Compact</div>
+            <button class="toggle" id="compactToggle" aria-pressed="false">
+              <span>Compact mode<small>Denser cards and tighter spacing</small></span>
+              <span class="track"><span class="knob"></span></span>
+            </button>
+            <div class="label">Install</div>
+            <button class="btn wide" id="installBtn2"><svg class="ic"><use href="#i-install"/></svg>Install Life OS</button>
+            <p class="fine" id="installHint">Installable when served over localhost or HTTPS.</p>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h2>Cloud sync</h2><span class="mono muted" id="cloudStatus">not configured</span></div>
+            <p class="muted small">Optional. Push/pull your snapshot to a cloud gist so you can restore it on another device.</p>
+            <label class="field span-2"><span>Provider</span><select id="cloudProvider">
+              <option value="none">Disabled</option>
+              <option value="gist">GitHub Gist</option>
+              <option value="jsonbin">JSONBin</option>
+            </select></label>
+            <label class="field span-2"><span>API token</span><input id="cloudToken" type="password" autocomplete="off" placeholder="paste token"></label>
+            <label class="field span-2" id="cloudGistField"><span>Gist ID (optional)</span><input id="cloudGistId" placeholder="leave blank to create"></label>
+            <div class="data-actions">
+              <button class="btn wide" id="cloudPush"><svg class="ic"><use href="#i-upload"/></svg>Push to cloud</button>
+              <button class="btn wide" id="cloudPull"><svg class="ic"><use href="#i-download"/></svg>Pull from cloud</button>
+            </div>
+            <p class="fine" id="cloudNote">Tokens are stored in this browser only.</p>
+          </div>
+
+          <div class="card">
+            <div class="card-head"><h2>Data</h2><span class="mono muted">local-first</span></div>
+            <p class="muted small">Everything is stored in this browser only. Export a JSON snapshot before clearing site data.</p>
+            <div class="data-actions">
+              <button class="btn wide" id="exportBtn2"><svg class="ic"><use href="#i-download"/></svg>Export snapshot</button>
+              <button class="btn wide" id="importBtn2"><svg class="ic"><use href="#i-upload"/></svg>Import snapshot</button>
+              <button class="btn wide" id="csvImportBtn"><svg class="ic"><use href="#i-download"/></svg>Import weight CSV</button>
+              <button class="btn wide" id="exportCsvBtn"><svg class="ic"><use href="#i-download"/></svg>Export weekly CSV</button>
+              <button class="btn wide danger" id="resetBtn"><svg class="ic"><use href="#i-trash"/></svg>Reset all data</button>
+            </div>
+            <p class="fine" id="storageInfo">—</p>
+          </div>
+        </div>
+      </section>
+
+    </main>
+  </div>
+
+  <nav class="bottomnav" aria-label="Primary mobile">
+    <button data-nav="home" aria-label="Home"><svg class="ic"><use href="#i-home"/></svg><span>Home</span></button>
+    <button data-nav="food" aria-label="Food"><svg class="ic"><use href="#i-food"/></svg><span>Food</span></button>
+    <button data-nav="gym" aria-label="Gym"><svg class="ic"><use href="#i-gym"/></svg><span>Gym</span></button>
+    <button data-nav="study" aria-label="Study"><svg class="ic"><use href="#i-study"/></svg><span>Study</span></button>
+    <button data-nav="profile" aria-label="Profile"><svg class="ic"><use href="#i-user"/></svg><span>Profile</span></button>
+  </nav>
+</div>
+
+<!-- ============================== MEAL MODAL ============================== -->
+<div class="modal-backdrop" id="mealModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="mealModalTitle">
+    <div class="modal-head">
+      <div><div class="eyebrow">Fuel log</div><h3 id="mealModalTitle">Log a meal</h3></div>
+      <button class="icon-btn" data-close aria-label="Close"><svg class="ic"><use href="#i-close"/></svg></button>
+    </div>
+    <form id="mealForm" class="form-grid" autocomplete="off">
+      <label class="field span-2"><span>Quick add (optional)</span><select id="presetMeal">
+        <option value="">— choose a preset or type below —</option>
+      </select></label>
+      <label class="field span-2"><span>Meal name</span><input name="name" maxlength="80" placeholder="e.g. Chicken rice bowl" required></label>
+      <label class="field"><span>Category</span><select name="cat" id="mealCat"></select></label>
+      <label class="field"><span>Calories</span><input name="kcal" type="number" min="0" max="5000" step="1" placeholder="kcal" required></label>
+      <label class="field"><span>Protein (g)</span><input name="p" type="number" min="0" max="500" step="0.1" value="0"></label>
+      <label class="field"><span>Carbs (g)</span><input name="c" type="number" min="0" max="800" step="0.1" value="0"></label>
+      <label class="field"><span>Fat (g)</span><input name="f" type="number" min="0" max="400" step="0.1" value="0"></label>
+      <label class="field"><span>Fibre (g)</span><input name="fib" type="number" min="0" max="200" step="0.1" value="0"></label>
+      <div class="modal-actions span-2">
+        <button type="button" class="btn" data-close>Cancel</button>
+        <button class="btn primary" type="submit"><svg class="ic"><use href="#i-check"/></svg>Add meal</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================== CHEF MODAL ============================== -->
+<div class="modal-backdrop" id="chefModal" hidden>
+  <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="chefTitle">
+    <div class="modal-head">
+      <div><div class="eyebrow">Local engine</div><h3 id="chefTitle">AI Chef — fill the gaps</h3></div>
+      <button class="icon-btn" data-close aria-label="Close"><svg class="ic"><use href="#i-close"/></svg></button>
+    </div>
+    <p class="muted small" id="chefIntro">Ranked against what you have left today.</p>
+    <form class="chef-prefs" id="chefPrefs" autocomplete="off">
+      <label class="field"><span>Diet</span><select id="chefDiet">
+        <option value="omnivore">Omnivore</option>
+        <option value="vegetarian">Vegetarian</option>
+        <option value="eggetarian">Vegetarian + eggs</option>
+        <option value="vegan">Vegan</option>
+        <option value="pescatarian">Pescatarian</option>
+      </select></label>
+      <label class="field"><span>Cuisine</span><select id="chefCuisine">
+        <option value="any">Any</option>
+        <option value="indian">Indian</option>
+        <option value="asian">Asian</option>
+        <option value="mediterranean">Mediterranean</option>
+        <option value="western">Western</option>
+        <option value="high-protein">High-protein / gym</option>
+      </select></label>
+      <label class="field span-2"><span>What's in your kitchen</span><input id="chefPantry" maxlength="160" placeholder="e.g. paneer, dal, rice, tomatoes, eggs"></label>
+      <label class="field span-2"><span>Avoid</span><input id="chefDislikes" maxlength="120" placeholder="e.g. mushrooms, peanuts, dairy"></label>
+      <div class="span-2 chef-prefs-actions">
+        <button class="btn tiny primary" type="submit"><svg class="ic"><use href="#i-spark"/></svg>Update suggestions</button>
+        <span class="fine">Saved on this device and used by the chef.</span>
+      </div>
+    </form>
+    <div class="chef-list" id="chefList"></div>
+  </div>
+</div>
+
+<!-- ============================== CONFIRM ============================== -->
+<div class="modal-backdrop" id="confirmModal" hidden>
+  <div class="modal small" role="dialog" aria-modal="true" aria-labelledby="confirmTitle">
+    <div class="modal-head">
+      <div><div class="eyebrow">Confirm</div><h3 id="confirmTitle">Are you sure?</h3></div>
+      <button class="icon-btn" data-close aria-label="Close"><svg class="ic"><use href="#i-close"/></svg></button>
+    </div>
+    <p class="muted" id="confirmText">This cannot be undone.</p>
+    <div class="modal-actions">
+      <button class="btn" data-close>Cancel</button>
+      <button class="btn danger" id="confirmOk">Confirm</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== SCHEDULE ============================== -->
+<div class="modal-backdrop" id="scheduleModal" hidden>
+  <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="scheduleTitle">
+    <div class="modal-head">
+      <div><div class="eyebrow">Daily structure</div><h3 id="scheduleTitle">Edit timetable</h3></div>
+      <button class="icon-btn" data-close aria-label="Close"><svg class="ic"><use href="#i-close"/></svg></button>
+    </div>
+    <form id="scheduleForm" class="form-grid" autocomplete="off">
+      <input type="hidden" name="id">
+      <label class="field span-2"><span>Block name</span><input name="label" maxlength="60" required placeholder="e.g. Deep work"></label>
+      <label class="field"><span>Start</span><input name="start" type="time" required></label>
+      <label class="field"><span>End</span><input name="end" type="time" required></label>
+      <label class="field span-2"><span>Category</span><select name="type">
+        <option value="study">Study / focus</option>
+        <option value="gym">Gym</option>
+        <option value="fuel">Food</option>
+        <option value="routine">Routine</option>
+        <option value="rest">Rest / break</option>
+      </select></label>
+      <div class="form-note span-2">Blocks are stored on this device. Tap a block below to edit it, or add a new one.</div>
+      <div class="modal-actions span-2">
+        <button type="button" class="btn danger" id="scheduleReset">Reset default</button>
+        <button type="button" class="btn" id="scheduleCancel" hidden>Cancel edit</button>
+        <button class="btn primary" type="submit"><svg class="ic"><use href="#i-check"/></svg><span id="scheduleSubmitLabel">Add block</span></button>
+      </div>
+    </form>
+    <div class="schedule-list" id="scheduleList"></div>
+    <div class="template-bar">
+      <input id="templateName" placeholder="Template name" maxlength="30">
+      <button class="btn tiny" id="saveTemplate">Save as template</button>
+      <select id="templateSelect"><option value="">— apply template —</option></select>
+      <button class="btn tiny primary" id="applyTemplate">Apply</button>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== ONBOARDING ============================== -->
+<div class="modal-backdrop" id="onboardModal" hidden>
+  <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="onboardTitle">
+    <div class="modal-head">
+      <div><div class="eyebrow">Welcome</div><h3 id="onboardTitle">Set up your Life OS</h3></div>
+    </div>
+    <p class="muted small">These become your defaults. You can change everything later in Profile.</p>
+    <form id="onboardForm" class="form-grid" autocomplete="off">
+      <label class="field span-2"><span>Name</span><input name="name" maxlength="40" required placeholder="Your name"></label>
+      <label class="field"><span>Age</span><input name="age" type="number" min="13" max="100" required value="20"></label>
+      <label class="field"><span>Sex</span><select name="sex"><option value="male">Male</option><option value="female">Female</option></select></label>
+      <label class="field"><span>Height (cm)</span><input name="height" type="number" min="120" max="230" required value="175"></label>
+      <label class="field"><span>Weight (kg)</span><input name="weight" type="number" min="35" max="250" step="0.1" required value="70"></label>
+      <label class="field"><span>Goal</span><select name="goal">
+        <option value="cut">Cut</option><option value="recomp" selected>Body recomp</option><option value="maintain">Maintain</option><option value="bulk">Bulk</option>
+      </select></label>
+      <label class="field"><span>Diet</span><select name="diet">
+        <option value="omnivore" selected>Omnivore</option><option value="vegetarian">Vegetarian</option><option value="eggetarian">Vegetarian + eggs</option><option value="vegan">Vegan</option><option value="pescatarian">Pescatarian</option>
+      </select></label>
+      <div class="modal-actions span-2">
+        <button class="btn" type="button" id="demoBtn"><svg class="ic"><use href="#i-bolt"/></svg>Explore the demo</button>
+        <button class="btn primary" type="submit"><svg class="ic"><use href="#i-check"/></svg>Start</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<!-- ============================== GYM EDIT ============================== -->
+<div class="modal-backdrop" id="gymEditModal" hidden>
+  <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="gymEditTitle">
+    <div class="modal-head">
+      <div><div class="eyebrow">Edit plan</div><h3 id="gymEditTitle">Planned exercises</h3></div>
+      <button class="icon-btn" data-close aria-label="Close"><svg class="ic"><use href="#i-close"/></svg></button>
+    </div>
+    <form id="gymExForm" class="form-grid" autocomplete="off">
+      <input type="hidden" name="idx">
+      <label class="field span-2"><span>Exercise name</span><input name="name" maxlength="60" required placeholder="e.g. Goblet squat"></label>
+      <label class="field"><span>Sets</span><input name="sets" type="number" min="1" max="10" required value="3"></label>
+      <label class="field"><span>Reps</span><input name="reps" maxlength="12" required value="8–10"></label>
+      <label class="field"><span>Rest (s)</span><input name="rest" type="number" min="0" max="600" value="90"></label>
+      <label class="field span-2"><span>Note</span><input name="note" maxlength="160" placeholder="Form cue"></label>
+      <div class="modal-actions span-2">
+        <button type="button" class="btn danger" id="gymResetDay">Reset to default</button>
+        <button type="button" class="btn" id="gymCancelEdit" hidden>Cancel edit</button>
+        <button class="btn primary" type="submit"><svg class="ic"><use href="#i-check"/></svg><span id="gymExSubmit">Add exercise</span></button>
+      </div>
+    </form>
+    <div class="schedule-list" id="gymExList"></div>
+  </div>
+</div>
+
+<!-- ============================== SHORTCUTS ============================== -->
+<div class="modal-backdrop" id="shortcutsModal" hidden>
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="shortcutsTitle">
+    <div class="modal-head">
+      <div><div class="eyebrow">Keyboard</div><h3 id="shortcutsTitle">Shortcuts</h3></div>
+      <button class="icon-btn" data-close aria-label="Close"><svg class="ic"><use href="#i-close"/></svg></button>
+    </div>
+    <div class="shortcut-list">
+      <div><kbd>Ctrl/Cmd+K</kbd><span>Command palette</span></div>
+      <div><kbd>/</kbd><span>Open palette</span></div>
+      <div><kbd>N</kbd><span>Log a meal</span></div>
+      <div><kbd>1–5</kbd><span>Jump to Home/Food/Gym/Study/Profile</span></div>
+      <div><kbd>Esc</kbd><span>Close modal / palette</span></div>
+      <div><kbd>H</kbd><span>Show this help</span></div>
+    </div>
+  </div>
+</div>
+
+<!-- ============================== GYM COACH ============================== -->
+<div class="modal-backdrop" id="coachModal" hidden>
+  <div class="modal wide" role="dialog" aria-modal="true" aria-labelledby="coachTitle">
+    <div class="modal-head">
+      <div><div class="eyebrow">AI Coach</div><h3 id="coachTitle">Build a workout</h3></div>
+      <button class="icon-btn" data-close aria-label="Close"><svg class="ic"><use href="#i-close"/></svg></button>
+    </div>
+    <form id="coachForm" class="form-grid" autocomplete="off">
+      <label class="field"><span>Equipment</span><select name="equip">
+        <option value="all">Full gym</option>
+        <option value="dumbbell">Dumbbells only</option>
+        <option value="bodyweight">Bodyweight only</option>
+      </select></label>
+      <label class="field"><span>Focus</span><select name="focus">
+        <option value="strength">Strength (heavy, low reps)</option>
+        <option value="hypertrophy" selected>Hypertrophy (moderate)</option>
+        <option value="endurance">Endurance (light, high reps)</option>
+      </select></label>
+      <div class="modal-actions span-2">
+        <button class="btn primary" type="submit"><svg class="ic"><use href="#i-spark"/></svg>Generate</button>
+      </div>
+    </form>
+    <div class="coach-list" id="coachList"></div>
+  </div>
+</div>
+
+<!-- ============================== PALETTE ============================== -->
+<div class="modal-backdrop palette" id="palette" hidden>
+  <div class="palette-panel" role="dialog" aria-modal="true" aria-label="Command palette">
+    <div class="palette-input">
+      <svg class="ic"><use href="#i-search"/></svg>
+      <input id="paletteInput" placeholder="Jump to a screen or run an action…" autocomplete="off" aria-label="Command">
+      <kbd>ESC</kbd>
+    </div>
+    <div class="palette-list" id="paletteList"></div>
+  </div>
+</div>
+
+<!-- ============================== WORKOUT ============================== -->
+<div class="workout" id="workoutOverlay" hidden>
+  <header class="wo-head">
+    <div>
+      <div class="eyebrow" id="woEyebrow">Live session</div>
+      <h2 id="woTitle">Workout</h2>
+    </div>
+    <div class="wo-head-right">
+      <span class="chip mono big" id="woTimer">00:00</span>
+      <button class="icon-btn" id="woClose" aria-label="Close workout"><svg class="ic"><use href="#i-close"/></svg></button>
+    </div>
+  </header>
+  <div class="wo-progress"><i id="woProgress"></i></div>
+  <div class="wo-body" id="woBody"></div>
+  <footer class="wo-foot">
+    <div class="wo-rest">
+      <span class="eyebrow">Rest</span>
+      <b class="mono" id="woRest">—</b>
+      <button class="btn tiny" id="woRestBtn">Start 60s</button>
+    </div>
+    <div class="wo-actions">
+      <span class="mono muted" id="woSets">0 sets logged</span>
+      <button class="btn primary" id="woFinish"><svg class="ic"><use href="#i-check"/></svg>Finish session</button>
+    </div>
+  </footer>
+</div>
+
+<div class="toasts" id="toasts" aria-live="polite" aria-atomic="false"></div>
+  <div class="rest-float" id="restFloat" hidden>
+    <span class="rest-float-label">Rest</span>
+    <b id="restFloatTime">0:00</b>
+    <button class="icon-btn" id="restFloatSkip" aria-label="Skip rest"><svg class="ic"><use href="#i-close"/></svg></button>
+  </div>
+
+<script src="./js/core.js"></script>
+<script src="./js/food.js"></script>
+<script src="./js/gym.js"></script>
+<script src="./js/study.js"></script>
+<script src="./js/profile.js"></script>
+<script src="./js/schedule.js"></script>
+<script src="./js/init.js"></script>
+</body>
+</html>
+
